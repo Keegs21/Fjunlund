@@ -1,9 +1,20 @@
 import "styles/tailwind.css"
+import { Providers } from './providers'
+import Navbar from "./components/Navbar"
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode,
+}) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang='en'>
+      <body>
+        <Navbar />
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }
