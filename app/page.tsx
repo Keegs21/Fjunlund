@@ -29,6 +29,7 @@ interface LeaderboardEntry {
 }
 
 
+
 const leaderboardData: LeaderboardEntry[] = Array.from({ length: 10 }, (_, i) => ({
   rank: i + 1,
   username: `User${i + 1}`,
