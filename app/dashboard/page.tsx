@@ -16,7 +16,7 @@ import {
 import TranslucentBox from 'app/components/TranslucentBox';
 import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
-import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
+import LandNFTABI from '../../artifacts/contracts/LandNFT.sol/LandNFT.json';
 import BuildingManagerABI from '../../artifacts/contracts/BuildingManager.sol/BuildingManager.json';
 import { LandNFT, BuildingManager } from '../../typechain-types';
 
@@ -200,18 +200,14 @@ export default function Dashboard() {
           LAND_NFT_CONTRACT,
           LandNFTABI.abi,
           signer
-        ) as unknown as LandNFT;
+        ) as LandNFT;
   
-        const txData = await landNFTContract.populateTransaction.startBuildingConstruction(
+        // Correct syntax for Ethers.js v6
+        const estimatedGas = await landNFTContract.startBuildingConstruction.estimateGas(
           tokenId,
           building.name,
           building.level
         );
-  
-        const estimatedGas = await provider.estimateGas({
-          ...txData,
-          from: await signer.getAddress(),
-        });
   
         console.log('Estimated Gas:', estimatedGas);
         return estimatedGas;
@@ -241,7 +237,6 @@ export default function Dashboard() {
       </Button>
     );
   };
-  
 
   const startBuilding = async (
     tokenId: number,
@@ -256,7 +251,7 @@ export default function Dashboard() {
         LAND_NFT_CONTRACT,
         LandNFTABI.abi,
         signer
-      ) as unknown as LandNFT;
+      ) as LandNFT;
   
       const tx = await landNFTContract.startBuildingConstruction(
         tokenId,
@@ -276,8 +271,7 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error starting building construction:', error);
     }
-  };
-  
+  };   
 
   const formatCompletionTime = (completionTime: number) => {
     const timeRemaining = Math.max(0, completionTime * 1000 - Date.now());
