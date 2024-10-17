@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Box, Flex, Text, Spinner, Image, Tooltip } from '@chakra-ui/react';
 import { ethers } from 'ethers';
-import LandNFTABI from '../../artifacts/contracts/LandNFT.sol/LandNFT.json';
-import MapContractABI from '../../artifacts/contracts/MapContract.sol/MapContract.json';
+import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
+import MapContractABI from '../../artifacts/contracts/mapContract.sol/MapContract.json';
 import { LandNFT } from '../../typechain-types/contracts/landNFT.sol/LandNFT';
 import { MapContract } from '../../typechain-types/contracts/mapContract.sol/MapContract';
 import { FixedSizeGrid as Grid } from 'react-window';

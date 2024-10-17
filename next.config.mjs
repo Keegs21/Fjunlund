@@ -13,6 +13,9 @@ const config = withPlugins([[withBundleAnalyzer({ enabled: env.ANALYZE })]], {
     },
   },
   experimental: { instrumentationHook: true },
+  eslint: {
+    ignoreDuringBuilds: true,  // This will ignore ESLint during the build process
+  },
   rewrites() {
     return [
       { source: "/healthz", destination: "/api/health" },

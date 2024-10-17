@@ -16,7 +16,7 @@ import {
 import TranslucentBox from 'app/components/TranslucentBox';
 import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
-import LandNFTABI from '../../artifacts/contracts/LandNFT.sol/LandNFT.json';
+import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
 import BuildingManagerABI from '../../artifacts/contracts/BuildingManager.sol/BuildingManager.json';
 import { LandNFT, BuildingManager } from '../../typechain-types';
 

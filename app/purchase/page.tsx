@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import TranslucentBox from 'app/components/TranslucentBox';
 import { ethers } from 'ethers';
-import LandNFTABI from '../../artifacts/contracts/LandNFT.sol/LandNFT.json';
+import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
 import { useAccount } from 'wagmi';
 import { LandNFT } from '../../typechain-types/contracts/landNFT.sol/LandNFT';
 
