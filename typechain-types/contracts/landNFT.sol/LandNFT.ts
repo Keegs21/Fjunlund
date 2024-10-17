@@ -567,7 +567,6 @@ export namespace TransferEvent {
 }
 
 export interface LandNFT extends BaseContract {
-  [x: string]: any;
   connect(runner?: ContractRunner | null): LandNFT;
   waitForDeployment(): Promise<this>;
 

@@ -6,7 +6,7 @@ import customTheme from 'app/theme/theme';
 import Link from 'next/link';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ethers } from 'ethers';
-import LandNFTABI from '../../artifacts/contracts/LandNFT.sol/LandNFT.json'; // Update path if necessary
+import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
 
 // Contract details
 const LAND_NFT_CONTRACT = '0xf0917dB35E39B32D67A632A311bF04580557632C'; // Replace with your deployed contract address

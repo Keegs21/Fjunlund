@@ -72,10 +72,10 @@ export default function MapPage() {
       ) as unknown as MapContract;
 
       const landNFTContract = new ethers.Contract(
-        LAND_NFT_CONTRACT,
-        LandNFTABI.abi,
-        provider
-      ) as LandNFT;
+          LAND_NFT_CONTRACT,
+          LandNFTABI.abi,
+          provider
+      ) as unknown as LandNFT;
 
       // Fetch GRID_SIZE, MIN_COORDINATE, and MAX_COORDINATE from the MapContract
       const GRID_SIZE = await mapContract.GRID_SIZE();
