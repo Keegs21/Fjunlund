@@ -11,7 +11,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ethers } from 'ethers';
 import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
 import LeaderboardABI from '../../artifacts/contracts/leaderboard.sol/Leaderboard.json';
-import RewardsDistributorABI from '../../artifacts/contracts/RewardsDistributor.sol/RewardsDistributor.json'; // Import the RewardsDistributor ABI
+import RewardsDistributorABI from '../../artifacts/contracts/rewardsDistributor.sol/RewardsDistributor.json'; // Import the RewardsDistributor ABI
 
 // Contract details
 const LAND_NFT_CONTRACT = '0xbDAa58F7f2C235DD93a0396D653AEa09116F088d'; // Replace with your deployed contract address

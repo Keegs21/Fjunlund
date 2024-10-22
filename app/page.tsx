@@ -27,7 +27,7 @@ import TranslucentBox from './components/TranslucentBox';
 import { useAccount, useReadContract } from 'wagmi';
 import { ethers } from 'ethers';
 import LeaderboardABI from '../artifacts/contracts/leaderboard.sol/Leaderboard.json';
-import RewardsDistributorABI from '../artifacts/contracts/RewardsDistributor.sol/RewardsDistributor.json'; // Import RewardsDistributor ABI
+import RewardsDistributorABI from '../artifacts/contracts/rewardsDistributor.sol/RewardsDistributor.json'; // Import RewardsDistributor ABI
 import ERC20ABI from '../artifacts/contracts/erc20.sol/erc20.json'; // Import ERC20 ABI
 
 // Contract Addresses
