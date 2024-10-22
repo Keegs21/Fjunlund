@@ -13,6 +13,7 @@ import {
   Image,
   Spinner,
   useToast,
+  Select, // Imported Select component
 } from '@chakra-ui/react';
 import TranslucentBox from 'app/components/TranslucentBox';
 import { useAccount } from 'wagmi';
@@ -24,11 +25,12 @@ import { LandNFT, BuildingManager, IERC20 } from '../../typechain-types';
 
 const LAND_NFT_CONTRACT = '0xbDAa58F7f2C235DD93a0396D653AEa09116F088d'; 
 const BUILDING_MANAGER_CONTRACT = '0x058aBf1000EF621EEE1bf186ed76B44C8bdBe5d6';
-const ERC20_CONTRACT_ADDRESS = '0x05c5ecee53692524f72e10588a787aed324de367'
+const ERC20_CONTRACT_ADDRESS = '0x05c5ecee53692524f72e10588a787aed324de367';
 
 export default function Dashboard() {
   const { address } = useAccount();
   const [userTokens, setUserTokens] = useState<TokenData[]>([]);
+  const [selectedTokenId, setSelectedTokenId] = useState<number | null>(null); // New state for selected NFT
   const [buildingsInfo, setBuildingsInfo] = useState<BuildingInfo[]>([]);
   const [completingConstruction, setCompletingConstruction] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -243,6 +245,12 @@ export default function Dashboard() {
     }
   }, [address]);
 
+  // Handle dropdown selection change
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const tokenId = Number(event.target.value);
+    setSelectedTokenId(tokenId);
+  };
+
   // Helper function to format IPFS URIs
   const formatIPFS = (uri: string): string => {
     if (uri.startsWith('ipfs://')) {
@@ -361,7 +369,7 @@ export default function Dashboard() {
           building.name,
           building.level,
           {
-            gasLimit: estimatedGas, // Adding buffer to gas limit
+            gasLimit: estimatedGas, // Using estimated gas
           }
         );
 
@@ -383,7 +391,7 @@ export default function Dashboard() {
           isClosable: true,
         });
 
-        // Optionally, trigger a refresh of NFT data here
+        // Trigger a refresh of NFT data
         fetchNFTData();
       } catch (error: any) {
         console.error('Error starting building construction:', error);
@@ -483,6 +491,9 @@ export default function Dashboard() {
     );
   }
 
+  // Find the selected token data
+  const selectedTokenData = userTokens.find(token => token.tokenId === selectedTokenId);
+
   return (
     <Box p={8}>
       <Flex direction={['column', 'row']} mb={6} gap={6}>
@@ -502,12 +513,33 @@ export default function Dashboard() {
 
       <Divider my={6} />
 
-      {userTokens.map((tokenData) => (
-        <Box key={tokenData.tokenId} mb={8}>
+      {/* Dropdown Selector */}
+      <Box mb={6}>
+        <TranslucentBox bg="rgba(78, 211, 255, 0.8)" p={4}>
+          <Heading as="h3" size="md" mb={2} color="secondary.500">
+            Select Your NFT
+          </Heading>
+          <Select
+            placeholder="Select an NFT"
+            onChange={handleSelectChange}
+            value={selectedTokenId !== null ? selectedTokenId : undefined}
+          >
+            {userTokens.map((token) => (
+              <option key={token.tokenId} value={token.tokenId}>
+                Token ID: {token.tokenId} (Coords: {token.coordinates.x}, {token.coordinates.y})
+              </option>
+            ))}
+          </Select>
+        </TranslucentBox>
+      </Box>
+
+      {/* Display Selected NFT Information */}
+      {selectedTokenData ? (
+        <Box mb={8}>
           {/* NFT Card */}
           <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%">
             <Heading as="h2" size="lg" mb={4} color="secondary.500">
-              Land NFT (Token ID: {tokenData.tokenId})
+              Land NFT (Token ID: {selectedTokenData.tokenId})
             </Heading>
             <Box
               p={4}
@@ -535,26 +567,26 @@ export default function Dashboard() {
                 <Box flex="1" mb={[4, 0]} mr={[0, 4]}>
                   <VStack align="start" spacing={3}>
                     <Text fontSize="md">
-                      <strong>Population:</strong> {tokenData.landStats.population}
+                      <strong>Population:</strong> {selectedTokenData.landStats.population}
                     </Text>
                     <Text fontSize="md">
-                      <strong>Production:</strong> {tokenData.landStats.production}
+                      <strong>Production:</strong> {selectedTokenData.landStats.production}
                     </Text>
                     <Text fontSize="md">
-                      <strong>Happiness:</strong> {tokenData.landStats.happiness}
+                      <strong>Happiness:</strong> {selectedTokenData.landStats.happiness}
                     </Text>
                     <Text fontSize="md">
-                      <strong>Technology:</strong> {tokenData.landStats.technology}
+                      <strong>Technology:</strong> {selectedTokenData.landStats.technology}
                     </Text>
                     <Text fontSize="md">
-                      <strong>Piety:</strong> {tokenData.landStats.piety}
+                      <strong>Piety:</strong> {selectedTokenData.landStats.piety}
                     </Text>
                     <Text fontSize="md">
-                      <strong>Strength:</strong> {tokenData.landStats.strength}
+                      <strong>Strength:</strong> {selectedTokenData.landStats.strength}
                     </Text>
                     <Text fontSize="md">
-                      <strong>Coordinates:</strong> ({tokenData.coordinates.x},{' '}
-                      {tokenData.coordinates.y})
+                      <strong>Coordinates:</strong> ({selectedTokenData.coordinates.x},{' '}
+                      {selectedTokenData.coordinates.y})
                     </Text>
                   </VStack>
                 </Box>
@@ -568,24 +600,24 @@ export default function Dashboard() {
                     <HStack align="start" spacing={10}>
                       <VStack align="start" spacing={1}>
                         <Text fontSize="sm">
-                          <strong>Food:</strong> {tokenData.landStats.resources.food}
+                          <strong>Food:</strong> {selectedTokenData.landStats.resources.food}
                         </Text>
                         <Text fontSize="sm">
-                          <strong>Wood:</strong> {tokenData.landStats.resources.wood}
+                          <strong>Wood:</strong> {selectedTokenData.landStats.resources.wood}
                         </Text>
                         <Text fontSize="sm">
-                          <strong>Stone:</strong> {tokenData.landStats.resources.stone}
+                          <strong>Stone:</strong> {selectedTokenData.landStats.resources.stone}
                         </Text>
                       </VStack>
                       <VStack align="start" spacing={1}>
                         <Text fontSize="sm">
-                          <strong>Brass:</strong> {tokenData.landStats.resources.brass}
+                          <strong>Brass:</strong> {selectedTokenData.landStats.resources.brass}
                         </Text>
                         <Text fontSize="sm">
-                          <strong>Iron:</strong> {tokenData.landStats.resources.iron}
+                          <strong>Iron:</strong> {selectedTokenData.landStats.resources.iron}
                         </Text>
                         <Text fontSize="sm">
-                          <strong>Gold:</strong> {tokenData.landStats.resources.gold}
+                          <strong>Gold:</strong> {selectedTokenData.landStats.resources.gold}
                         </Text>
                       </VStack>
                     </HStack>
@@ -602,58 +634,9 @@ export default function Dashboard() {
             <Heading as="h2" size="lg" mb={4} color="secondary.500">
               Buildings Under Construction
             </Heading>
-            {tokenData.landStats.constructions.length > 0 ? (
-              tokenData.landStats.constructions.map((construction: any, index: number) => (
-                <Box
-                  key={index}
-                  mb={4}
-                  p={4}
-                  borderWidth="1px"
-                  borderRadius="md"
-                  shadow="md"
-                  width="300px"
-                >
-                  <Text fontSize="md">
-                    <strong>
-                      {construction.name} (Level {construction.level})
-                    </strong>
-                  </Text>
-                  <Text fontSize="sm">
-                    Completion Time: {formatCompletionTime(construction.completionTime)}
-                  </Text>
-                   {/* Complete Construction Button */}
-                   <Button
-                    mt={2}
-                    colorScheme="teal"
-                    isLoading={completingConstruction === tokenData.tokenId}
-                    onClick={() => completeBuildingConstruction(tokenData.tokenId)}
-                  >
-                    Complete Construction
-                  </Button>
-                </Box>
-              ))
-            ) : (
-              <Text fontSize="md">No buildings under construction</Text>
-            )}
-          </TranslucentBox>
-
-       {/* Already Constructed Buildings */}
-        <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>
-          <Heading as="h2" size="lg" mb={4} color="secondary.500">
-            Constructed Buildings
-          </Heading>
-          {tokenData.landStats.buildings.length > 0 ? (
-            <Flex wrap="wrap" gap={4}>
-              {tokenData.landStats.buildings.map((building: any, index: number) => {
-                // Find the corresponding building info to get the imageURI and boosts
-                const buildingInfo = buildingsInfo.find(
-                  (b) => b.name === building.name && b.level === building.level
-                );
-
-                // Format the image URI using the helper function
-                const imageUrl = buildingInfo ? formatIPFS(buildingInfo.imageURI) : '/placeholder-image.png';
-
-                return (
+            {selectedTokenData.landStats.constructions.length > 0 ? (
+              <Flex wrap="wrap" gap={4}>
+                {selectedTokenData.landStats.constructions.map((construction: any, index: number) => (
                   <Box
                     key={index}
                     p={4}
@@ -665,96 +648,185 @@ export default function Dashboard() {
                   >
                     <VStack align="start" spacing={3}>
                       {/* Building Image */}
-                      <Image
-                        src={imageUrl}
-                        alt={`${building.name} Image`}
-                        boxSize="100px"
-                        objectFit="cover"
-                        borderRadius="md"
-                        shadow="sm"
-                        fallback={<Spinner size="sm" />}
-                        onError={(e) => {
-                          e.currentTarget.src = '/placeholder-image.png'; // Path to your placeholder image
-                        }}
-                      />
+                      {buildingsInfo.length > 0 && (
+                        (() => {
+                          const buildingInfo = buildingsInfo.find(
+                            (b) => b.name === construction.name && b.level === construction.level
+                          );
+                          const imageUrl = buildingInfo ? formatIPFS(buildingInfo.imageURI) : '/placeholder-image.png';
+
+                          return (
+                            <Image
+                              src={imageUrl}
+                              alt={`${construction.name} Image`}
+                              boxSize="100px"
+                              objectFit="cover"
+                              borderRadius="md"
+                              shadow="sm"
+                              fallback={<Spinner size="sm" />}
+                              onError={(e) => {
+                                e.currentTarget.src = '/placeholder-image.png'; // Path to your placeholder image
+                              }}
+                            />
+                          );
+                        })()
+                      )}
 
                       {/* Building Name and Level */}
                       <Text fontSize="md">
                         <strong>
-                          {building.name} (Level {building.level})
+                          {construction.name} (Level {construction.level})
                         </strong>
-                        {building.isActive ? ' - Active' : ' - Inactive'}
+                      </Text>
+                      <Text fontSize="sm">
+                        Completion Time: {formatCompletionTime(construction.completionTime)}
                       </Text>
 
-                      {/* Production and Resource Boosts */}
-                      {buildingInfo && (
-                        <Box>
-                          <Text fontSize="sm" color="gray.600">
-                            <strong>Production Boost:</strong> {buildingInfo.productionBoost}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            <strong>Happiness Boost:</strong> {buildingInfo.happinessBoost}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            <strong>Technology Boost:</strong> {buildingInfo.technologyBoost}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            <strong>Piety Boost:</strong> {buildingInfo.pietyBoost}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            <strong>Strength Boost:</strong> {buildingInfo.strengthBoost}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            <strong>Resource Production:</strong>
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            Food: {buildingInfo.resourceProduction.foodPerEpoch}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            Wood: {buildingInfo.resourceProduction.woodPerEpoch}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            Stone: {buildingInfo.resourceProduction.stonePerEpoch}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            Brass: {buildingInfo.resourceProduction.brassPerEpoch}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            Iron: {buildingInfo.resourceProduction.ironPerEpoch}
-                          </Text>
-                          <Text fontSize="sm" color="gray.600">
-                            Gold: {buildingInfo.resourceProduction.goldPerEpoch}
-                          </Text>
-                        </Box>
-                      )}
+                      {/* Complete Construction Button */}
+                      <Button
+                        mt={2}
+                        colorScheme="teal"
+                        isLoading={completingConstruction === selectedTokenData.tokenId}
+                        onClick={() => completeBuildingConstruction(selectedTokenData.tokenId)}
+                      >
+                        Complete Construction
+                      </Button>
                     </VStack>
                   </Box>
-                );
-              })}
-            </Flex>
-          ) : (
-            <Text fontSize="md">No buildings constructed</Text>
-          )}
-        </TranslucentBox>
+                ))}
+              </Flex>
+            ) : (
+              <Text fontSize="md">No buildings under construction</Text>
+            )}
+          </TranslucentBox>
 
+          {/* Already Constructed Buildings */}
+          <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>
+            <Heading as="h2" size="lg" mb={4} color="secondary.500">
+              Constructed Buildings
+            </Heading>
+            {selectedTokenData.landStats.buildings.length > 0 ? (
+              <Flex wrap="wrap" gap={4}>
+                {selectedTokenData.landStats.buildings.map((building: any, index: number) => {
+                  // Find the corresponding building info to get the imageURI and boosts
+                  const buildingInfo = buildingsInfo.find(
+                    (b) => b.name === building.name && b.level === building.level
+                  );
+
+                  // Format the image URI using the helper function
+                  const imageUrl = buildingInfo ? formatIPFS(buildingInfo.imageURI) : '/placeholder-image.png';
+
+                  return (
+                    <Box
+                      key={index}
+                      p={4}
+                      borderWidth="1px"
+                      borderRadius="md"
+                      shadow="md"
+                      width={{ base: '100%', sm: '45%', md: '30%' }}
+                      bg="primary.300"
+                    >
+                      <VStack align="start" spacing={3}>
+                        {/* Building Image */}
+                        {buildingInfo && buildingInfo.imageURI ? (
+                          <Image
+                            src={imageUrl}
+                            alt={`${building.name} Image`}
+                            boxSize="100px"
+                            objectFit="cover"
+                            borderRadius="md"
+                            shadow="sm"
+                            fallback={<Spinner size="sm" />}
+                            onError={(e) => {
+                              e.currentTarget.src = '/placeholder-image.png'; // Path to your placeholder image
+                            }}
+                          />
+                        ) : (
+                          <Image
+                            src="/placeholder-image.png" // Fallback image
+                            alt="Placeholder Image"
+                            boxSize="100px"
+                            objectFit="cover"
+                            borderRadius="md"
+                            shadow="sm"
+                          />
+                        )}
+
+                        {/* Building Name and Level */}
+                        <Text fontSize="md">
+                          <strong>
+                            {building.name} (Level {building.level})
+                          </strong>
+                          {building.isActive ? ' - Active' : ' - Inactive'}
+                        </Text>
+
+                        {/* Production and Resource Boosts */}
+                        {buildingInfo && (
+                          <Box>
+                            <Text fontSize="sm" color="gray.600">
+                              <strong>Production Boost:</strong> {buildingInfo.productionBoost}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              <strong>Happiness Boost:</strong> {buildingInfo.happinessBoost}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              <strong>Technology Boost:</strong> {buildingInfo.technologyBoost}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              <strong>Piety Boost:</strong> {buildingInfo.pietyBoost}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              <strong>Strength Boost:</strong> {buildingInfo.strengthBoost}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              <strong>Resource Production:</strong>
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Food: {buildingInfo.resourceProduction.foodPerEpoch}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Wood: {buildingInfo.resourceProduction.woodPerEpoch}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Stone: {buildingInfo.resourceProduction.stonePerEpoch}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Brass: {buildingInfo.resourceProduction.brassPerEpoch}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Iron: {buildingInfo.resourceProduction.ironPerEpoch}
+                            </Text>
+                            <Text fontSize="sm" color="gray.600">
+                              Gold: {buildingInfo.resourceProduction.goldPerEpoch}
+                            </Text>
+                          </Box>
+                        )}
+                      </VStack>
+                    </Box>
+                  );
+                })}
+              </Flex>
+            ) : (
+              <Text fontSize="md">No buildings constructed</Text>
+            )}
+          </TranslucentBox>
 
           {/* Available Buildings Section */}
           <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>
             <Heading as="h2" size="lg" mb={4} color="secondary.500">
               Available Buildings and Requirements
             </Heading>
-            <Flex wrap="wrap" justifyContent="space-between" width="100%">
+            <Flex wrap="wrap" justifyContent="space-between" gap={4}>
               {buildingsInfo.length > 0 ? (
                 buildingsInfo.map((building, index) => (
                   <Box
                     key={index}
-                    mb={4}
                     p={4}
                     borderWidth="1px"
                     borderRadius="md"
                     shadow="md"
-                    width="100%"
-                    maxWidth="700px"
+                    width={{ base: '100%', sm: '45%', md: '30%' }}
+                    bg="primary.300"
                   >
                     <VStack align="start" spacing={4} width="100%">
                       {/* Building Name and Level */}
@@ -775,7 +847,7 @@ export default function Dashboard() {
                           shadow="sm"
                           fallback={<Spinner size="sm" />}
                           onError={(e) => {
-                            e.currentTarget.src = '/placeholder-image.png'; // Path to a local placeholder image
+                            e.currentTarget.src = '/placeholder-image.png'; // Path to your placeholder image
                           }}
                         />
                       )}
@@ -837,8 +909,8 @@ export default function Dashboard() {
                       {/* Start Building Button */}
                       <StartBuildingButton
                         building={building}
-                        tokenId={tokenData.tokenId}
-                        resources={tokenData.landStats.resources}
+                        tokenId={selectedTokenId!}
+                        resources={selectedTokenData.landStats.resources}
                       />
                     </VStack>
                   </Box>
@@ -849,7 +921,15 @@ export default function Dashboard() {
             </Flex>
           </TranslucentBox>
         </Box>
-      ))}
+      ) : (
+        <Box p={8}>
+          <TranslucentBox textAlign="center">
+            <Text fontSize="xl" mt={4}>
+              No NFT selected or NFT data unavailable.
+            </Text>
+          </TranslucentBox>
+        </Box>
+      )}
     </Box>
   );
 }
