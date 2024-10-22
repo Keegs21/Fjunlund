@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { Box, Flex, Text, Spinner, Image, Tooltip } from '@chakra-ui/react';
-import { ethers } from 'ethers';
+import { ethers, Provider } from 'ethers';
 import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
 import MapContractABI from '../../artifacts/contracts/mapContract.sol/MapContract.json';
 import { LandNFT } from '../../typechain-types/contracts/landNFT.sol/LandNFT';
@@ -31,9 +31,16 @@ export default function MapPage() {
   const [maxCoordinateX, setMaxCoordinateX] = useState<number>(99); // Max X coordinate for 100x100 grid
   const [maxCoordinateY, setMaxCoordinateY] = useState<number>(99); // Max Y coordinate for 100x100 grid
   const [unownableCoords, setUnownableCoords] = useState<{ [key: string]: boolean }>({}); // Store unownable coordinates
-  
-  const provider = useMemo(() => {
-    return window.ethereum ? new ethers.BrowserProvider(window.ethereum) : ethers.getDefaultProvider();
+  const [provider, setProvider] = useState<Provider | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.ethereum) {
+      const web3Provider = new ethers.BrowserProvider(window.ethereum);
+      setProvider(web3Provider);
+    } else {
+      const defaultProvider = ethers.getDefaultProvider();
+      setProvider(defaultProvider);
+    }
   }, []);
 
   // Calculate tile size to fit the screen width

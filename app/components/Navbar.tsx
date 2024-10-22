@@ -1,5 +1,4 @@
 // src/components/Navbar.tsx
-
 'use client';
 
 import { Box, Button, Flex, Text, HStack, useToast } from '@chakra-ui/react';
