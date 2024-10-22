@@ -346,37 +346,34 @@ const buySelectedResources = async () => {
 
       // ... rest of your function
       if (marketContract.buyResources) {
-        const tx = await marketContract.buyResources(tokenIdBigInt + BigInt(1), desiredResourcesStruct);
+        const tx = await marketContract.buyResources(selectedNFT.tokenId, desiredResourcesStruct);
+        toast({
+            title: "Transaction Sent",
+            description: "Purchasing resources...",
+            status: "info",
+            duration: 3000,
+            isClosable: true,
+          });
+          await tx.wait();
+          toast({
+            title: "Purchase Successful",
+            description: "Successfully purchased selected resources.",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+          setDesiredResources({
+            food: 0,
+            wood: 0,
+            stone: 0,
+            brass: 0,
+            iron: 0,
+            gold: 0,
+          });
+          fetchResourcePrices();
       } else {
         throw new Error("buyResources method is undefined on the contract");
       }
-      const tx = await marketContract.buyResources(tokenIdBigInt + BigInt(1), desiredResourcesStruct);
-      toast({
-        title: "Transaction Sent",
-        description: "Purchasing resources...",
-        status: "info",
-        duration: 3000,
-        isClosable: true,
-      });
-      await tx.wait();
-      toast({
-        title: "Purchase Successful",
-        description: "Successfully purchased selected resources.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-  
-      // Reset desired resources and refresh data
-      setDesiredResources({
-        food: 0,
-        wood: 0,
-        stone: 0,
-        brass: 0,
-        iron: 0,
-        gold: 0,
-      });
-      fetchResourcePrices();
     } catch (error: any) {
       console.error("Purchase failed:", error);
       const errorMessage = error?.error?.message || error?.message || "Could not complete the purchase.";
