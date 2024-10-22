@@ -2,5 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as landNftSol from "./landNFT.sol";
+export * as leaderboardSol from "./leaderboard.sol";
 export * as mapContractSol from "./mapContract.sol";
+export * as marketcontractSol from "./marketcontract.sol";
+export * as rewardsDistributorSol from "./rewardsDistributor.sol";
 export { BuildingManager__factory } from "./BuildingManager__factory";

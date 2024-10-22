@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/BuildingManager.sol": {
-      "lastModificationDate": 1728583519056,
-      "contentHash": "829ea72e9c11cce53b0051939ad3b1bb",
+      "lastModificationDate": 1729556135533,
+      "contentHash": "1015c08a5d0b57e795c89961b20516d4",
       "sourceName": "contracts/BuildingManager.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -12,6 +12,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -30,7 +31,8 @@
       },
       "imports": [
         "./DataTypes.sol",
-        "./landNFT.sol"
+        "./landNFT.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
       ],
       "versionPragmas": [
         "^0.8.19"
@@ -50,6 +52,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -75,8 +78,8 @@
       ]
     },
     "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/landNFT.sol": {
-      "lastModificationDate": 1729178396265,
-      "contentHash": "e65c0795ef6c9c39bf80c5e8959aec94",
+      "lastModificationDate": 1729533424829,
+      "contentHash": "518f1ebb68e28cc27857f1bff7a00e4a",
       "sourceName": "contracts/landNFT.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -85,6 +88,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -103,6 +107,8 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
         "@openzeppelin/contracts/security/ReentrancyGuard.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
         "./BuildingManager.sol",
@@ -116,78 +122,6 @@
         "LandNFT"
       ]
     },
-    "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/mapContract.sol": {
-      "lastModificationDate": 1729177302542,
-      "contentHash": "62c64cb6eca4434db1c2cfadf2699552",
-      "sourceName": "contracts/mapContract.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./DataTypes.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.19"
-      ],
-      "artifacts": [
-        "MapContract"
-      ]
-    },
-    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
-      "lastModificationDate": 1728584705800,
-      "contentHash": "1535f8c0c68463f8c1b5239f7584e71f",
-      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "ReentrancyGuard"
-      ]
-    },
     "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
       "lastModificationDate": 1728584705785,
       "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
@@ -199,6 +133,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -225,6 +160,161 @@
         "Ownable"
       ]
     },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/mapContract.sol": {
+      "lastModificationDate": 1729389510372,
+      "contentHash": "cf3bfc784be457f660b6fa83ab22372d",
+      "sourceName": "contracts/mapContract.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./DataTypes.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "MapContract"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+      "lastModificationDate": 1728584705800,
+      "contentHash": "1535f8c0c68463f8c1b5239f7584e71f",
+      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+      "lastModificationDate": 1728584710709,
+      "contentHash": "3ae5166c6827a9cf1a7a462d1632b464",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./extensions/IERC20Metadata.sol",
+        "../../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+      "lastModificationDate": 1728584716665,
+      "contentHash": "a159c68235d1d18f16dd0a57a000daea",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol",
+        "../extensions/IERC20Permit.sol",
+        "../../../utils/Address.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeERC20"
+      ]
+    },
     "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol": {
       "lastModificationDate": 1728584716662,
       "contentHash": "212e86880d210b6cac8c3eb0cd6b1fad",
@@ -236,6 +326,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -274,6 +365,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -298,10 +390,10 @@
         "Context"
       ]
     },
-    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
-      "lastModificationDate": 1728584716664,
-      "contentHash": "f4dd06783f321aa26179bc2b6e361c29",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol",
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1728584710709,
+      "contentHash": "df36f7051335cd1e748b1b6463b7fdd3",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
         "version": "0.8.19",
         "settings": {
@@ -309,6 +401,43 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+      "lastModificationDate": 1728584716659,
+      "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -326,13 +455,85 @@
         }
       },
       "imports": [
-        "../IERC721.sol"
+        "../IERC20.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "IERC721Enumerable"
+        "IERC20Metadata"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/utils/Address.sol": {
+      "lastModificationDate": 1728584705790,
+      "contentHash": "211ffd288c1588ba8c10eae668ca3c66",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.1"
+      ],
+      "artifacts": [
+        "Address"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol": {
+      "lastModificationDate": 1728584716659,
+      "contentHash": "aa849939a4ae83a4dcb2dca9b3e9e707",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20Permit"
       ]
     },
     "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
@@ -346,6 +547,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -378,10 +580,10 @@
         "ERC721"
       ]
     },
-    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1728584710708,
-      "contentHash": "48de4c9a3a4ae5ef66a2aa620843413f",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
+      "lastModificationDate": 1728584716664,
+      "contentHash": "f4dd06783f321aa26179bc2b6e361c29",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol",
       "solcConfig": {
         "version": "0.8.19",
         "settings": {
@@ -389,6 +591,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -406,83 +609,13 @@
         }
       },
       "imports": [
-        "../../utils/introspection/IERC165.sol"
+        "../IERC721.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "IERC721"
-      ]
-    },
-    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
-      "lastModificationDate": 1728584710712,
-      "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
-      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC165"
-      ]
-    },
-    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1728584705790,
-      "contentHash": "211ffd288c1588ba8c10eae668ca3c66",
-      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.1"
-      ],
-      "artifacts": [
-        "Address"
+        "IERC721Enumerable"
       ]
     },
     "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
@@ -496,6 +629,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -534,6 +668,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -571,6 +706,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -595,6 +731,44 @@
         "IERC721Receiver"
       ]
     },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
+      "lastModificationDate": 1728584710708,
+      "contentHash": "48de4c9a3a4ae5ef66a2aa620843413f",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721"
+      ]
+    },
     "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
       "lastModificationDate": 1728584716663,
       "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
@@ -606,6 +780,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -643,6 +818,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -678,6 +854,7 @@
             "enabled": true,
             "runs": 200
           },
+          "viaIR": true,
           "outputSelection": {
             "*": {
               "*": [
@@ -700,6 +877,166 @@
       ],
       "artifacts": [
         "SignedMath"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+      "lastModificationDate": 1728584710712,
+      "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC165"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/leaderboard.sol": {
+      "lastModificationDate": 1729389513740,
+      "contentHash": "cd1655d45c5a142db2a8672808de6b74",
+      "sourceName": "contracts/leaderboard.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "./landNFT.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "Leaderboard"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/marketcontract.sol": {
+      "lastModificationDate": 1729533422615,
+      "contentHash": "a3459787168c78049435d9b2eae4145f",
+      "sourceName": "contracts/marketcontract.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./DataTypes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "ILandNFT",
+        "MarketContract"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/rewardsDistributor.sol": {
+      "lastModificationDate": 1729545836670,
+      "contentHash": "1d2dfb04c0e29660785da696ca77e1ff",
+      "sourceName": "contracts/rewardsDistributor.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "ILandNFT",
+        "ILeaderboard",
+        "RewardsDistributor"
       ]
     }
   }

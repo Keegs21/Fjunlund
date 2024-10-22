@@ -3,6 +3,12 @@
 /* eslint-disable */
 import type * as landNftSol from "./landNFT.sol";
 export type { landNftSol };
+import type * as leaderboardSol from "./leaderboard.sol";
+export type { leaderboardSol };
 import type * as mapContractSol from "./mapContract.sol";
 export type { mapContractSol };
+import type * as marketcontractSol from "./marketcontract.sol";
+export type { marketcontractSol };
+import type * as rewardsDistributorSol from "./rewardsDistributor.sol";
+export type { rewardsDistributorSol };
 export type { BuildingManager } from "./BuildingManager";

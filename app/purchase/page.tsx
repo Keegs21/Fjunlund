@@ -17,13 +17,14 @@ import { ethers } from 'ethers';
 import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
 import { useAccount } from 'wagmi';
 import { LandNFT } from '../../typechain-types/contracts/landNFT.sol/LandNFT';
+import { m } from 'framer-motion';
 
 enum MintOption {
   RANDOM = 0,
   ADJACENT = 1,
 }
 
-const LAND_NFT_CONTRACT = '0xf0917dB35E39B32D67A632A311bF04580557632C'; // Replace with your actual LandNFT contract address
+const LAND_NFT_CONTRACT = '0xbDAa58F7f2C235DD93a0396D653AEa09116F088d'; // Replace with your actual LandNFT contract address
 
 export default function Purchase() {
   const { address } = useAccount(); // Get the connected user's address
@@ -49,6 +50,7 @@ export default function Purchase() {
         const mintPriceEth = ethers.formatEther(mintPriceBN);
 
         setMintPrice(mintPriceEth);
+        console.log('Mint price:', mintPriceEth);
       } else {
         alert('Please install MetaMask to interact with this feature.');
       }
@@ -75,7 +77,7 @@ export default function Purchase() {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
 
-      const landNFTContract = new ethers.Contract(
+      const landNFTContract = new ethers.BaseContract(
         LAND_NFT_CONTRACT,
         LandNFTABI.abi,
         signer
@@ -90,13 +92,15 @@ export default function Purchase() {
       const x = 0; // Not used for RANDOM option
       const y = 0; // Not used for RANDOM option
 
+      const estimatedGas = await landNFTContract.mint.estimateGas(mintOption, existingTokenId, { value: mintPriceBN });
+
       // Call the mint function with required arguments and transaction overrides
       const tx = await landNFTContract.mint(
         mintOption,
         existingTokenId,
-        x,
-        y,
-        { value: mintPriceBN }
+        { value: mintPriceBN,
+        gasLimit: estimatedGas,
+         }
       );
 
       console.log('Transaction sent:', tx.hash);
@@ -167,7 +171,7 @@ export default function Purchase() {
               </Heading>
               <Text>{nftDetails.description}</Text>
               <Text>
-                <strong>Price:</strong> {nftDetails.price} ETH
+                <strong>Price:</strong> {nftDetails.price} S
               </Text>
               <Button
                 colorScheme="teal"

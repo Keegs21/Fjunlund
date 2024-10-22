@@ -12,26 +12,85 @@ import {
   Divider,
   Image,
   Spinner,
+  useToast,
 } from '@chakra-ui/react';
 import TranslucentBox from 'app/components/TranslucentBox';
 import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
 import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
 import BuildingManagerABI from '../../artifacts/contracts/BuildingManager.sol/BuildingManager.json';
-import { LandNFT, BuildingManager } from '../../typechain-types';
+import erc20abi from '../../artifacts/contracts/erc20.sol/erc20.json';
+import { LandNFT, BuildingManager, IERC20 } from '../../typechain-types';
 
-const LAND_NFT_CONTRACT = '0xf0917dB35E39B32D67A632A311bF04580557632C'; 
-const BUILDING_MANAGER_CONTRACT = '0x652358bc97b6A234afc58B12A78578A04Ab70872'; 
+const LAND_NFT_CONTRACT = '0xbDAa58F7f2C235DD93a0396D653AEa09116F088d'; 
+const BUILDING_MANAGER_CONTRACT = '0x058aBf1000EF621EEE1bf186ed76B44C8bdBe5d6';
+const ERC20_CONTRACT_ADDRESS = '0x05c5ecee53692524f72e10588a787aed324de367'
 
 export default function Dashboard() {
   const { address } = useAccount();
   const [userTokens, setUserTokens] = useState<TokenData[]>([]);
-  const [buildingsInfo, setBuildingsInfo] = useState<any[]>([]);
+  const [buildingsInfo, setBuildingsInfo] = useState<BuildingInfo[]>([]);
+  const [completingConstruction, setCompletingConstruction] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+
+  interface ResourceProduction {
+    foodPerEpoch: number;
+    woodPerEpoch: number;
+    stonePerEpoch: number;
+    brassPerEpoch: number;
+    ironPerEpoch: number;
+    goldPerEpoch: number;
+  }
+
+  interface BuildingInfo {
+    name: string;
+    level: number;
+    baseCost: {
+      food: number;
+      wood: number;
+      stone: number;
+      brass: number;
+      iron: number;
+      gold: number;
+    };
+    productionBoost: number;
+    happinessBoost: number;
+    technologyBoost: number;
+    pietyBoost: number;
+    strengthBoost: number;
+    resourceProduction: ResourceProduction;
+    baseConstructionTime: number;
+    imageURI: string; // New field for image URI
+  }
 
   interface TokenData {
     tokenId: number;
-    landStats: any;
+    landStats: {
+      population: number;
+      production: number;
+      happiness: number;
+      technology: number;
+      piety: number;
+      strength: number;
+      resources: {
+        food: number;
+        wood: number;
+        stone: number;
+        brass: number;
+        iron: number;
+        gold: number;
+      };
+      buildings: Array<{
+        name: string;
+        level: number;
+        isActive: boolean;
+      }>;
+      constructions: Array<{
+        name: string;
+        level: number;
+        completionTime: number;
+      }>;
+    };
     coordinates: { x: number; y: number };
   }
 
@@ -132,7 +191,7 @@ export default function Dashboard() {
         ];
 
         const fetchBuildingInfo = async (buildingNames: string[], level: number) => {
-          const buildingData: any[] = [];
+          const buildingData: BuildingInfo[] = [];
           for (const name of buildingNames) {
             const buildingInfo = await buildingManagerContract.getBuildingInfo(name, level);
             buildingData.push({
@@ -160,6 +219,7 @@ export default function Dashboard() {
                 goldPerEpoch: Number(buildingInfo.resourceProduction.goldPerEpoch),
               },
               baseConstructionTime: Number(buildingInfo.baseConstructionTime),
+              imageURI: buildingInfo.imageURI, // Fetch the imageURI
             });
           }
           return buildingData;
@@ -183,68 +243,181 @@ export default function Dashboard() {
     }
   }, [address]);
 
-  const StartBuildingButton = ({
+  // Helper function to format IPFS URIs
+  const formatIPFS = (uri: string): string => {
+    if (uri.startsWith('ipfs://')) {
+      const cid = uri.replace('ipfs://', '');
+      return `https://ipfs.io/ipfs/${cid}`;
+    }
+    return uri; // Return as-is if it's not an IPFS URI
+  };
+
+  // Function to start building construction
+  function StartBuildingButton({
     building,
     tokenId,
     resources,
   }: {
-    building: any;
+    building: BuildingInfo;
     tokenId: number;
     resources: any;
-  }) => {
-    const estimateGas = async () => {
+  }) {
+    const [isLoading, setIsLoading] = useState(false);
+    const toast = useToast();
+
+    // Helper function to check if user can build
+    const canBuild = () => {
+      return (
+        resources.food >= building.baseCost.food &&
+        resources.wood >= building.baseCost.wood &&
+        resources.stone >= building.baseCost.stone &&
+        resources.brass >= building.baseCost.brass &&
+        resources.iron >= building.baseCost.iron &&
+        resources.gold >= building.baseCost.gold
+      );
+    };
+
+    // Function to handle button click
+    const handleClick = async () => {
+      if (!window.ethereum) {
+        toast({
+          title: 'MetaMask Not Found',
+          description: 'Please install MetaMask to interact with this feature.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      setIsLoading(true);
+
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send('eth_requestAccounts', []); // Prompt user to connect wallet
         const signer = await provider.getSigner();
+        const userAddress = await signer.getAddress();
+
+        // Instantiate contracts
         const landNFTContract = new ethers.Contract(
           LAND_NFT_CONTRACT,
           LandNFTABI.abi,
           signer
         ) as unknown as LandNFT;
-  
-        // Correct syntax for Ethers.js v6
-        const estimatedGas = await landNFTContract.startBuildingConstruction.estimateGas(
+
+        const erc20Contract = new ethers.Contract(
+          ERC20_CONTRACT_ADDRESS,
+          erc20abi,
+          signer
+        ) as unknown as IERC20;
+
+        // Calculate ERC20 cost: gold cost * 10^8
+        const erc20CostInUnits = ethers.parseUnits(building.baseCost.gold.toString(), 8);
+
+        // Check ERC20 balance
+        const balance = await erc20Contract.balanceOf(userAddress);
+        if (balance < erc20CostInUnits) {
+          toast({
+            title: 'Insufficient ERC20 Tokens',
+            description: 'You do not have enough ERC20 tokens to pay for this building.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
+          setIsLoading(false);
+          return;
+        }
+
+        // Check ERC20 allowance
+        const allowance = await erc20Contract.allowance(userAddress, LAND_NFT_CONTRACT);
+        if (allowance < erc20CostInUnits) {
+          // Prompt user to approve ERC20 tokens
+          toast({
+            title: 'Approving ERC20 Tokens',
+            description: 'Please approve the required amount of ERC20 tokens for this transaction.',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
+
+          const approveTx = await erc20Contract.approve(LAND_NFT_CONTRACT, ethers.parseUnits('1000000', 18)); // Approving a high amount to reduce future approvals
+          await approveTx.wait();
+
+          toast({
+            title: 'ERC20 Tokens Approved',
+            description: 'You have successfully approved the ERC20 tokens.',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+
+        // Estimate gas
+        const estimatedGas = await landNFTContract.startBuildingConstruction.estimateGas(tokenId, building.name, building.level);
+        
+        // Execute transaction
+        const tx = await landNFTContract.startBuildingConstruction(
           tokenId,
           building.name,
-          building.level
+          building.level,
+          {
+            gasLimit: estimatedGas, // Adding buffer to gas limit
+          }
         );
-  
-        console.log('Estimated Gas:', estimatedGas);
-        return estimatedGas;
-      } catch (error) {
-        console.error('Error estimating gas:', error);
-        return undefined;
+
+        toast({
+          title: 'Building Construction Started',
+          description: `Transaction sent: ${tx.hash}`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        });
+
+        await tx.wait();
+
+        toast({
+          title: 'Building Construction Confirmed',
+          description: `Your building construction for ${building.name} has been started.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        });
+
+        // Optionally, trigger a refresh of NFT data here
+        fetchNFTData();
+      } catch (error: any) {
+        console.error('Error starting building construction:', error);
+        toast({
+          title: 'Transaction Failed',
+          description: error?.reason || 'An error occurred while starting building construction.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
+      } finally {
+        setIsLoading(false);
       }
     };
-  
-    const handleClick = async () => {
-      const estimatedGas = await estimateGas();
-      if (estimatedGas !== undefined) {
-        startBuilding(tokenId, building.name, Number(building.level), estimatedGas);
-      } else {
-        console.error('Estimated gas is undefined');
-      }
-    };
-  
+
     return (
       <Button
-        colorScheme={canBuild(building.baseCost, resources) ? 'green' : 'gray'}
-        isDisabled={!canBuild(building.baseCost, resources)}
+        colorScheme={canBuild() ? 'green' : 'gray'}
+        isDisabled={!canBuild()}
         onClick={handleClick}
+        isLoading={isLoading}
+        loadingText="Processing"
         mt={4}
       >
-        {canBuild(building.baseCost, resources) ? 'Start Building' : 'Not Enough Resources'}
+        {canBuild() ? 'Start Building' : 'Not Enough Resources'}
       </Button>
     );
-  };
+  }
 
-  const startBuilding = async (
-    tokenId: number,
-    buildingName: string,
-    level: number,
-    estimatedGas: bigint
-  ) => {
+  // Function to complete building construction
+  const completeBuildingConstruction = async (tokenId: number) => {
     try {
+      setCompletingConstruction(tokenId);
+
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const landNFTContract = new ethers.Contract(
@@ -252,26 +425,20 @@ export default function Dashboard() {
         LandNFTABI.abi,
         signer
       ) as unknown as LandNFT;
-  
-      const tx = await landNFTContract.startBuildingConstruction(
-        tokenId,
-        buildingName,
-        level,
-        {
-          gasLimit: estimatedGas,
-        }
-      );
-  
-      console.log('Transaction sent:', tx.hash);
-      const receipt = await tx.wait();
-      console.log('Transaction mined:', receipt);
-  
-      // Refresh data after building starts
+
+      // Call the contract function to complete construction
+      const tx = await landNFTContract.completeBuildingConstruction(tokenId);
+      await tx.wait();
+
+      // Refetch data after completing construction
       fetchNFTData();
+
+      setCompletingConstruction(null);
     } catch (error) {
-      console.error('Error starting building construction:', error);
+      console.error('Error completing construction:', error);
+      setCompletingConstruction(null);
     }
-  };   
+  };
 
   const formatCompletionTime = (completionTime: number) => {
     const timeRemaining = Math.max(0, completionTime * 1000 - Date.now());
@@ -454,6 +621,15 @@ export default function Dashboard() {
                   <Text fontSize="sm">
                     Completion Time: {formatCompletionTime(construction.completionTime)}
                   </Text>
+                   {/* Complete Construction Button */}
+                   <Button
+                    mt={2}
+                    colorScheme="teal"
+                    isLoading={completingConstruction === tokenData.tokenId}
+                    onClick={() => completeBuildingConstruction(tokenData.tokenId)}
+                  >
+                    Complete Construction
+                  </Button>
                 </Box>
               ))
             ) : (
@@ -461,34 +637,106 @@ export default function Dashboard() {
             )}
           </TranslucentBox>
 
-          {/* Already Constructed Buildings */}
-          <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>
-            <Heading as="h2" size="lg" mb={4} color="secondary.500">
-              Constructed Buildings
-            </Heading>
-            {tokenData.landStats.buildings.length > 0 ? (
-              tokenData.landStats.buildings.map((building: any, index: number) => (
-                <Box
-                  key={index}
-                  mb={4}
-                  p={4}
-                  borderWidth="1px"
-                  borderRadius="md"
-                  shadow="md"
-                  width="300px"
-                >
-                  <Text fontSize="md">
-                    <strong>
-                      {building.name} (Level {building.level})
-                    </strong>
-                    {building.isActive ? ' - Active' : ' - Inactive'}
-                  </Text>
-                </Box>
-              ))
-            ) : (
-              <Text fontSize="md">No buildings constructed</Text>
-            )}
-          </TranslucentBox>
+       {/* Already Constructed Buildings */}
+        <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>
+          <Heading as="h2" size="lg" mb={4} color="secondary.500">
+            Constructed Buildings
+          </Heading>
+          {tokenData.landStats.buildings.length > 0 ? (
+            <Flex wrap="wrap" gap={4}>
+              {tokenData.landStats.buildings.map((building: any, index: number) => {
+                // Find the corresponding building info to get the imageURI and boosts
+                const buildingInfo = buildingsInfo.find(
+                  (b) => b.name === building.name && b.level === building.level
+                );
+
+                // Format the image URI using the helper function
+                const imageUrl = buildingInfo ? formatIPFS(buildingInfo.imageURI) : '/placeholder-image.png';
+
+                return (
+                  <Box
+                    key={index}
+                    p={4}
+                    borderWidth="1px"
+                    borderRadius="md"
+                    shadow="md"
+                    width={{ base: '100%', sm: '45%', md: '30%' }}
+                    bg="whiteAlpha.800"
+                  >
+                    <VStack align="start" spacing={3}>
+                      {/* Building Image */}
+                      <Image
+                        src={imageUrl}
+                        alt={`${building.name} Image`}
+                        boxSize="100px"
+                        objectFit="cover"
+                        borderRadius="md"
+                        shadow="sm"
+                        fallback={<Spinner size="sm" />}
+                        onError={(e) => {
+                          e.currentTarget.src = '/placeholder-image.png'; // Path to your placeholder image
+                        }}
+                      />
+
+                      {/* Building Name and Level */}
+                      <Text fontSize="md">
+                        <strong>
+                          {building.name} (Level {building.level})
+                        </strong>
+                        {building.isActive ? ' - Active' : ' - Inactive'}
+                      </Text>
+
+                      {/* Production and Resource Boosts */}
+                      {buildingInfo && (
+                        <Box>
+                          <Text fontSize="sm" color="gray.600">
+                            <strong>Production Boost:</strong> {buildingInfo.productionBoost}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            <strong>Happiness Boost:</strong> {buildingInfo.happinessBoost}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            <strong>Technology Boost:</strong> {buildingInfo.technologyBoost}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            <strong>Piety Boost:</strong> {buildingInfo.pietyBoost}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            <strong>Strength Boost:</strong> {buildingInfo.strengthBoost}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            <strong>Resource Production:</strong>
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            Food: {buildingInfo.resourceProduction.foodPerEpoch}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            Wood: {buildingInfo.resourceProduction.woodPerEpoch}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            Stone: {buildingInfo.resourceProduction.stonePerEpoch}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            Brass: {buildingInfo.resourceProduction.brassPerEpoch}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            Iron: {buildingInfo.resourceProduction.ironPerEpoch}
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            Gold: {buildingInfo.resourceProduction.goldPerEpoch}
+                          </Text>
+                        </Box>
+                      )}
+                    </VStack>
+                  </Box>
+                );
+              })}
+            </Flex>
+          ) : (
+            <Text fontSize="md">No buildings constructed</Text>
+          )}
+        </TranslucentBox>
+
 
           {/* Available Buildings Section */}
           <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>
@@ -515,6 +763,22 @@ export default function Dashboard() {
                           {building.name} (Level {building.level})
                         </Text>
                       </Box>
+
+                      {/* Building Image */}
+                      {building.imageURI && (
+                        <Image
+                          src={formatIPFS(building.imageURI)}
+                          alt={`${building.name} Image`}
+                          boxSize="150px"
+                          objectFit="cover"
+                          borderRadius="md"
+                          shadow="sm"
+                          fallback={<Spinner size="sm" />}
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder-image.png'; // Path to a local placeholder image
+                          }}
+                        />
+                      )}
 
                       {/* Base Cost - Horizontal Layout */}
                       <HStack justifyContent="space-between" width="100%">
@@ -547,24 +811,12 @@ export default function Dashboard() {
                           Production Levels:
                         </Text>
                         <HStack spacing={4}>
-                          <Text fontSize="sm">
-                            Food: {building.resourceProduction.foodPerEpoch}
-                          </Text>
-                          <Text fontSize="sm">
-                            Wood: {building.resourceProduction.woodPerEpoch}
-                          </Text>
-                          <Text fontSize="sm">
-                            Stone: {building.resourceProduction.stonePerEpoch}
-                          </Text>
-                          <Text fontSize="sm">
-                            Brass: {building.resourceProduction.brassPerEpoch}
-                          </Text>
-                          <Text fontSize="sm">
-                            Iron: {building.resourceProduction.ironPerEpoch}
-                          </Text>
-                          <Text fontSize="sm">
-                            Gold: {building.resourceProduction.goldPerEpoch}
-                          </Text>
+                          <Text fontSize="sm">Food: {building.resourceProduction.foodPerEpoch}</Text>
+                          <Text fontSize="sm">Wood: {building.resourceProduction.woodPerEpoch}</Text>
+                          <Text fontSize="sm">Stone: {building.resourceProduction.stonePerEpoch}</Text>
+                          <Text fontSize="sm">Brass: {building.resourceProduction.brassPerEpoch}</Text>
+                          <Text fontSize="sm">Iron: {building.resourceProduction.ironPerEpoch}</Text>
+                          <Text fontSize="sm">Gold: {building.resourceProduction.goldPerEpoch}</Text>
                         </HStack>
                       </HStack>
 
@@ -582,7 +834,7 @@ export default function Dashboard() {
                         </HStack>
                       </HStack>
 
-                      {/* Button */}
+                      {/* Start Building Button */}
                       <StartBuildingButton
                         building={building}
                         tokenId={tokenData.tokenId}

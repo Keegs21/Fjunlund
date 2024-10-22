@@ -24,30 +24,6 @@ import type {
 } from "../../common";
 
 export declare namespace DataTypes {
-  export type BuildingStruct = {
-    name: string;
-    level: BigNumberish;
-    isActive: boolean;
-  };
-
-  export type BuildingStructOutput = [
-    name: string,
-    level: bigint,
-    isActive: boolean
-  ] & { name: string; level: bigint; isActive: boolean };
-
-  export type BuildingUnderConstructionStruct = {
-    name: string;
-    level: BigNumberish;
-    completionTime: BigNumberish;
-  };
-
-  export type BuildingUnderConstructionStructOutput = [
-    name: string,
-    level: bigint,
-    completionTime: bigint
-  ] & { name: string; level: bigint; completionTime: bigint };
-
   export type ResourcesStruct = {
     food: BigNumberish;
     wood: BigNumberish;
@@ -72,6 +48,30 @@ export declare namespace DataTypes {
     iron: bigint;
     gold: bigint;
   };
+
+  export type BuildingStruct = {
+    name: string;
+    level: BigNumberish;
+    isActive: boolean;
+  };
+
+  export type BuildingStructOutput = [
+    name: string,
+    level: bigint,
+    isActive: boolean
+  ] & { name: string; level: bigint; isActive: boolean };
+
+  export type BuildingUnderConstructionStruct = {
+    name: string;
+    level: BigNumberish;
+    completionTime: BigNumberish;
+  };
+
+  export type BuildingUnderConstructionStructOutput = [
+    name: string,
+    level: bigint,
+    completionTime: bigint
+  ] & { name: string; level: bigint; completionTime: bigint };
 
   export type LandStatsStruct = {
     population: BigNumberish;
@@ -114,17 +114,23 @@ export declare namespace DataTypes {
 export interface LandNFTInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "addResources"
       | "approve"
       | "balanceOf"
       | "buildingManager"
       | "completeBuildingConstruction"
       | "epochDuration"
+      | "erc20Token"
       | "getApproved"
       | "getLandCoordinates"
       | "getLandStats"
       | "increaseMaxSupply"
       | "isApprovedForAll"
+      | "landStats"
+      | "lastEpochUpdateTime"
+      | "lastFlippedEpochTime"
       | "mapContract"
+      | "marketContract"
       | "maxSupply"
       | "mint"
       | "mintPrice"
@@ -137,12 +143,15 @@ export interface LandNFTInterface extends Interface {
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
       | "setBuildingManager"
+      | "setERC20Token"
       | "setMapContract"
+      | "setMarketContract"
       | "setMintPrice"
       | "startBuildingConstruction"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
+      | "tokenDecimals"
       | "tokenOfOwnerByIndex"
       | "tokenURI"
       | "totalSupply"
@@ -150,6 +159,7 @@ export interface LandNFTInterface extends Interface {
       | "transferOwnership"
       | "updateEpoch"
       | "withdraw"
+      | "withdrawERC20"
   ): FunctionFragment;
 
   getEvent(
@@ -159,11 +169,16 @@ export interface LandNFTInterface extends Interface {
       | "BuildingConstructionCompleted"
       | "BuildingConstructionStarted"
       | "EpochUpdated"
+      | "MarketContractSet"
       | "Minted"
       | "OwnershipTransferred"
       | "Transfer"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "addResources",
+    values: [BigNumberish, DataTypes.ResourcesStruct]
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
@@ -182,6 +197,10 @@ export interface LandNFTInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "epochDuration",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "erc20Token",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -205,13 +224,29 @@ export interface LandNFTInterface extends Interface {
     values: [AddressLike, AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "landStats",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lastEpochUpdateTime",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lastFlippedEpochTime",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "mapContract",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "marketContract",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "maxSupply", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "mint",
-    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "mintPrice", values?: undefined): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
@@ -245,7 +280,15 @@ export interface LandNFTInterface extends Interface {
     values: [AddressLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "setERC20Token",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setMapContract",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMarketContract",
     values: [AddressLike]
   ): string;
   encodeFunctionData(
@@ -264,6 +307,10 @@ export interface LandNFTInterface extends Interface {
   encodeFunctionData(
     functionFragment: "tokenByIndex",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenDecimals",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "tokenOfOwnerByIndex",
@@ -287,10 +334,18 @@ export interface LandNFTInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "updateEpoch",
-    values: [BigNumberish]
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "withdrawERC20",
+    values?: undefined
+  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "addResources",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -305,6 +360,7 @@ export interface LandNFTInterface extends Interface {
     functionFragment: "epochDuration",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "erc20Token", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -325,8 +381,21 @@ export interface LandNFTInterface extends Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "landStats", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "lastEpochUpdateTime",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lastFlippedEpochTime",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "mapContract",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "marketContract",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "maxSupply", data: BytesLike): Result;
@@ -360,7 +429,15 @@ export interface LandNFTInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setERC20Token",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setMapContract",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMarketContract",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -378,6 +455,10 @@ export interface LandNFTInterface extends Interface {
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "tokenByIndex",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenDecimals",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -402,6 +483,10 @@ export interface LandNFTInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawERC20",
+    data: BytesLike
+  ): Result;
 }
 
 export namespace ApprovalEvent {
@@ -471,19 +556,22 @@ export namespace BuildingConstructionStartedEvent {
     tokenId: BigNumberish,
     buildingName: string,
     level: BigNumberish,
-    completionTime: BigNumberish
+    completionTime: BigNumberish,
+    erc20Cost: BigNumberish
   ];
   export type OutputTuple = [
     tokenId: bigint,
     buildingName: string,
     level: bigint,
-    completionTime: bigint
+    completionTime: bigint,
+    erc20Cost: bigint
   ];
   export interface OutputObject {
     tokenId: bigint;
     buildingName: string;
     level: bigint;
     completionTime: bigint;
+    erc20Cost: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -492,17 +580,22 @@ export namespace BuildingConstructionStartedEvent {
 }
 
 export namespace EpochUpdatedEvent {
-  export type InputTuple = [
-    tokenId: BigNumberish,
-    stats: DataTypes.LandStatsStruct
-  ];
-  export type OutputTuple = [
-    tokenId: bigint,
-    stats: DataTypes.LandStatsStructOutput
-  ];
+  export type InputTuple = [epochNumber: BigNumberish];
+  export type OutputTuple = [epochNumber: bigint];
   export interface OutputObject {
-    tokenId: bigint;
-    stats: DataTypes.LandStatsStructOutput;
+    epochNumber: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace MarketContractSetEvent {
+  export type InputTuple = [marketContract: AddressLike];
+  export type OutputTuple = [marketContract: string];
+  export interface OutputObject {
+    marketContract: string;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -609,6 +702,12 @@ export interface LandNFT extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  addResources: TypedContractMethod<
+    [tokenId: BigNumberish, resources: DataTypes.ResourcesStruct],
+    [void],
+    "nonpayable"
+  >;
+
   approve: TypedContractMethod<
     [to: AddressLike, tokenId: BigNumberish],
     [void],
@@ -626,6 +725,8 @@ export interface LandNFT extends BaseContract {
   >;
 
   epochDuration: TypedContractMethod<[], [bigint], "view">;
+
+  erc20Token: TypedContractMethod<[], [string], "view">;
 
   getApproved: TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
 
@@ -653,17 +754,44 @@ export interface LandNFT extends BaseContract {
     "view"
   >;
 
+  landStats: TypedContractMethod<
+    [arg0: BigNumberish],
+    [
+      [
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        DataTypes.ResourcesStructOutput,
+        bigint
+      ] & {
+        population: bigint;
+        production: bigint;
+        happiness: bigint;
+        technology: bigint;
+        piety: bigint;
+        strength: bigint;
+        resources: DataTypes.ResourcesStructOutput;
+        lastResourceUpdate: bigint;
+      }
+    ],
+    "view"
+  >;
+
+  lastEpochUpdateTime: TypedContractMethod<[], [bigint], "view">;
+
+  lastFlippedEpochTime: TypedContractMethod<[], [bigint], "view">;
+
   mapContract: TypedContractMethod<[], [string], "view">;
+
+  marketContract: TypedContractMethod<[], [string], "view">;
 
   maxSupply: TypedContractMethod<[], [bigint], "view">;
 
   mint: TypedContractMethod<
-    [
-      option: BigNumberish,
-      existingTokenId: BigNumberish,
-      x: BigNumberish,
-      y: BigNumberish
-    ],
+    [option: BigNumberish, existingTokenId: BigNumberish],
     [void],
     "payable"
   >;
@@ -709,8 +837,20 @@ export interface LandNFT extends BaseContract {
     "nonpayable"
   >;
 
+  setERC20Token: TypedContractMethod<
+    [_erc20Token: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
   setMapContract: TypedContractMethod<
     [_mapContract: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  setMarketContract: TypedContractMethod<
+    [_marketContract: AddressLike],
     [void],
     "nonpayable"
   >;
@@ -737,6 +877,8 @@ export interface LandNFT extends BaseContract {
 
   tokenByIndex: TypedContractMethod<[index: BigNumberish], [bigint], "view">;
 
+  tokenDecimals: TypedContractMethod<[], [bigint], "view">;
+
   tokenOfOwnerByIndex: TypedContractMethod<
     [owner: AddressLike, index: BigNumberish],
     [bigint],
@@ -759,18 +901,23 @@ export interface LandNFT extends BaseContract {
     "nonpayable"
   >;
 
-  updateEpoch: TypedContractMethod<
-    [tokenId: BigNumberish],
-    [void],
-    "nonpayable"
-  >;
+  updateEpoch: TypedContractMethod<[], [void], "nonpayable">;
 
   withdraw: TypedContractMethod<[], [void], "nonpayable">;
+
+  withdrawERC20: TypedContractMethod<[], [void], "nonpayable">;
 
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "addResources"
+  ): TypedContractMethod<
+    [tokenId: BigNumberish, resources: DataTypes.ResourcesStruct],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "approve"
   ): TypedContractMethod<
@@ -790,6 +937,9 @@ export interface LandNFT extends BaseContract {
   getFunction(
     nameOrSignature: "epochDuration"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "erc20Token"
+  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "getApproved"
   ): TypedContractMethod<[tokenId: BigNumberish], [string], "view">;
@@ -818,7 +968,43 @@ export interface LandNFT extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "landStats"
+  ): TypedContractMethod<
+    [arg0: BigNumberish],
+    [
+      [
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        bigint,
+        DataTypes.ResourcesStructOutput,
+        bigint
+      ] & {
+        population: bigint;
+        production: bigint;
+        happiness: bigint;
+        technology: bigint;
+        piety: bigint;
+        strength: bigint;
+        resources: DataTypes.ResourcesStructOutput;
+        lastResourceUpdate: bigint;
+      }
+    ],
+    "view"
+  >;
+  getFunction(
+    nameOrSignature: "lastEpochUpdateTime"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "lastFlippedEpochTime"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
     nameOrSignature: "mapContract"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "marketContract"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "maxSupply"
@@ -826,12 +1012,7 @@ export interface LandNFT extends BaseContract {
   getFunction(
     nameOrSignature: "mint"
   ): TypedContractMethod<
-    [
-      option: BigNumberish,
-      existingTokenId: BigNumberish,
-      x: BigNumberish,
-      y: BigNumberish
-    ],
+    [option: BigNumberish, existingTokenId: BigNumberish],
     [void],
     "payable"
   >;
@@ -883,8 +1064,14 @@ export interface LandNFT extends BaseContract {
     nameOrSignature: "setBuildingManager"
   ): TypedContractMethod<[_buildingManager: AddressLike], [void], "nonpayable">;
   getFunction(
+    nameOrSignature: "setERC20Token"
+  ): TypedContractMethod<[_erc20Token: AddressLike], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "setMapContract"
   ): TypedContractMethod<[_mapContract: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "setMarketContract"
+  ): TypedContractMethod<[_marketContract: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "setMintPrice"
   ): TypedContractMethod<[newPrice: BigNumberish], [void], "nonpayable">;
@@ -904,6 +1091,9 @@ export interface LandNFT extends BaseContract {
   getFunction(
     nameOrSignature: "tokenByIndex"
   ): TypedContractMethod<[index: BigNumberish], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "tokenDecimals"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "tokenOfOwnerByIndex"
   ): TypedContractMethod<
@@ -929,9 +1119,12 @@ export interface LandNFT extends BaseContract {
   ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "updateEpoch"
-  ): TypedContractMethod<[tokenId: BigNumberish], [void], "nonpayable">;
+  ): TypedContractMethod<[], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "withdraw"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "withdrawERC20"
   ): TypedContractMethod<[], [void], "nonpayable">;
 
   getEvent(
@@ -968,6 +1161,13 @@ export interface LandNFT extends BaseContract {
     EpochUpdatedEvent.InputTuple,
     EpochUpdatedEvent.OutputTuple,
     EpochUpdatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "MarketContractSet"
+  ): TypedContractEvent<
+    MarketContractSetEvent.InputTuple,
+    MarketContractSetEvent.OutputTuple,
+    MarketContractSetEvent.OutputObject
   >;
   getEvent(
     key: "Minted"
@@ -1025,7 +1225,7 @@ export interface LandNFT extends BaseContract {
       BuildingConstructionCompletedEvent.OutputObject
     >;
 
-    "BuildingConstructionStarted(uint256,string,uint256,uint256)": TypedContractEvent<
+    "BuildingConstructionStarted(uint256,string,uint256,uint256,uint256)": TypedContractEvent<
       BuildingConstructionStartedEvent.InputTuple,
       BuildingConstructionStartedEvent.OutputTuple,
       BuildingConstructionStartedEvent.OutputObject
@@ -1036,7 +1236,7 @@ export interface LandNFT extends BaseContract {
       BuildingConstructionStartedEvent.OutputObject
     >;
 
-    "EpochUpdated(uint256,tuple)": TypedContractEvent<
+    "EpochUpdated(uint256)": TypedContractEvent<
       EpochUpdatedEvent.InputTuple,
       EpochUpdatedEvent.OutputTuple,
       EpochUpdatedEvent.OutputObject
@@ -1045,6 +1245,17 @@ export interface LandNFT extends BaseContract {
       EpochUpdatedEvent.InputTuple,
       EpochUpdatedEvent.OutputTuple,
       EpochUpdatedEvent.OutputObject
+    >;
+
+    "MarketContractSet(address)": TypedContractEvent<
+      MarketContractSetEvent.InputTuple,
+      MarketContractSetEvent.OutputTuple,
+      MarketContractSetEvent.OutputObject
+    >;
+    MarketContractSet: TypedContractEvent<
+      MarketContractSetEvent.InputTuple,
+      MarketContractSetEvent.OutputTuple,
+      MarketContractSetEvent.OutputObject
     >;
 
     "Minted(address,uint256,int256,int256)": TypedContractEvent<

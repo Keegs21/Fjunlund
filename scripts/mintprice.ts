@@ -3,7 +3,7 @@ import { ethers, formatEther, parseEther } from "ethers"; // For ethers v6
 import { LandNFT } from "../typechain-types/index"; // Adjust the path as necessary
 
 async function main() {
-  const contractAddress = "0x9659FC45239362AAc07C3E3F3CD1B94E199675D1"; // LandNFT contract address
+  const contractAddress = "0xdA7e33ea8758B84597BBE77C6E14796946e125d2"; // LandNFT contract address
   const LandNFT = await hardhatEthers.getContractFactory("LandNFT");
 
   // Attach to the already deployed contract

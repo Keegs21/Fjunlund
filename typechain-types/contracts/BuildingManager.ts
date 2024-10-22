@@ -8,6 +8,7 @@ import type {
   FunctionFragment,
   Result,
   Interface,
+  EventFragment,
   AddressLike,
   ContractRunner,
   ContractMethod,
@@ -17,6 +18,7 @@ import type {
   TypedContractEvent,
   TypedDeferredTopicFilter,
   TypedEventLog,
+  TypedLogDescription,
   TypedListener,
   TypedContractMethod,
 } from "../common";
@@ -99,6 +101,7 @@ export declare namespace BuildingManager {
     resourceProduction: DataTypes.ResourceProductionStruct;
     baseConstructionTime: BigNumberish;
     isAvailable: boolean;
+    imageURI: string;
   };
 
   export type BuildingInfoStructOutput = [
@@ -113,7 +116,8 @@ export declare namespace BuildingManager {
     strengthBoost: bigint,
     resourceProduction: DataTypes.ResourceProductionStructOutput,
     baseConstructionTime: bigint,
-    isAvailable: boolean
+    isAvailable: boolean,
+    imageURI: string
   ] & {
     name: string;
     level: bigint;
@@ -127,6 +131,7 @@ export declare namespace BuildingManager {
     resourceProduction: DataTypes.ResourceProductionStructOutput;
     baseConstructionTime: bigint;
     isAvailable: boolean;
+    imageURI: string;
   };
 }
 
@@ -138,9 +143,16 @@ export interface BuildingManagerInterface extends Interface {
       | "completeBuildingConstruction"
       | "getBuildingInfo"
       | "landNFT"
+      | "owner"
+      | "renounceOwnership"
       | "setLandNFT"
       | "startBuildingConstruction"
+      | "transferOwnership"
+      | "updateBuildingImageURI"
+      | "updateLandNFT"
   ): FunctionFragment;
+
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 
   encodeFunctionData(
     functionFragment: "availableBuildings",
@@ -159,6 +171,11 @@ export interface BuildingManagerInterface extends Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "landNFT", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "setLandNFT",
     values: [AddressLike]
@@ -166,6 +183,18 @@ export interface BuildingManagerInterface extends Interface {
   encodeFunctionData(
     functionFragment: "startBuildingConstruction",
     values: [string, BigNumberish, DataTypes.ResourcesStruct, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateBuildingImageURI",
+    values: [string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateLandNFT",
+    values: [AddressLike]
   ): string;
 
   decodeFunctionResult(
@@ -185,11 +214,41 @@ export interface BuildingManagerInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "landNFT", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setLandNFT", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "startBuildingConstruction",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateBuildingImageURI",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateLandNFT",
+    data: BytesLike
+  ): Result;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export interface BuildingManager extends BaseContract {
@@ -250,7 +309,8 @@ export interface BuildingManager extends BaseContract {
         bigint,
         DataTypes.ResourceProductionStructOutput,
         bigint,
-        boolean
+        boolean,
+        string
       ] & {
         name: string;
         level: bigint;
@@ -264,6 +324,7 @@ export interface BuildingManager extends BaseContract {
         resourceProduction: DataTypes.ResourceProductionStructOutput;
         baseConstructionTime: bigint;
         isAvailable: boolean;
+        imageURI: string;
       }
     ],
     "view"
@@ -295,6 +356,10 @@ export interface BuildingManager extends BaseContract {
 
   landNFT: TypedContractMethod<[], [string], "view">;
 
+  owner: TypedContractMethod<[], [string], "view">;
+
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
   setLandNFT: TypedContractMethod<
     [_landNFT: AddressLike],
     [void],
@@ -315,6 +380,24 @@ export interface BuildingManager extends BaseContract {
       }
     ],
     "view"
+  >;
+
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  updateBuildingImageURI: TypedContractMethod<
+    [buildingName: string, level: BigNumberish, newImageURI: string],
+    [void],
+    "nonpayable"
+  >;
+
+  updateLandNFT: TypedContractMethod<
+    [_newLandNFT: AddressLike],
+    [void],
+    "nonpayable"
   >;
 
   getFunction<T extends ContractMethod = ContractMethod>(
@@ -338,7 +421,8 @@ export interface BuildingManager extends BaseContract {
         bigint,
         DataTypes.ResourceProductionStructOutput,
         bigint,
-        boolean
+        boolean,
+        string
       ] & {
         name: string;
         level: bigint;
@@ -352,6 +436,7 @@ export interface BuildingManager extends BaseContract {
         resourceProduction: DataTypes.ResourceProductionStructOutput;
         baseConstructionTime: bigint;
         isAvailable: boolean;
+        imageURI: string;
       }
     ],
     "view"
@@ -387,6 +472,12 @@ export interface BuildingManager extends BaseContract {
     nameOrSignature: "landNFT"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "setLandNFT"
   ): TypedContractMethod<[_landNFT: AddressLike], [void], "nonpayable">;
   getFunction(
@@ -406,6 +497,38 @@ export interface BuildingManager extends BaseContract {
     ],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "updateBuildingImageURI"
+  ): TypedContractMethod<
+    [buildingName: string, level: BigNumberish, newImageURI: string],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "updateLandNFT"
+  ): TypedContractMethod<[_newLandNFT: AddressLike], [void], "nonpayable">;
 
-  filters: {};
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
+  >;
+
+  filters: {
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+  };
 }

@@ -3,8 +3,9 @@ pragma solidity ^0.8.19;
 
 import "./DataTypes.sol";
 import "./landNFT.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract BuildingManager {
+contract BuildingManager is Ownable {
     using DataTypes for DataTypes.Resources;
     using DataTypes for DataTypes.ResourceProduction;
     using DataTypes for DataTypes.LandStats;
@@ -12,15 +13,22 @@ contract BuildingManager {
     using DataTypes for DataTypes.BuildingUnderConstruction;
     using DataTypes for DataTypes.BuildingInfo;
 
-    address public landNFT;  // Set the address after deployment
+    address public landNFT; 
 
     constructor() {
         _initializeBuildings();
     }
 
-    function setLandNFT(address _landNFT) external {
+    // Function to set LandNFT address (initial setup)
+    function setLandNFT(address _landNFT) external onlyOwner {
         require(landNFT == address(0), "LandNFT is already set");
         landNFT = _landNFT;
+    }
+
+    // Function to update the LandNFT address by the owner if necessary
+    function updateLandNFT(address _newLandNFT) external onlyOwner {
+        require(_newLandNFT != address(0), "Invalid new address");
+        landNFT = _newLandNFT;
     }
 
     struct BuildingInfo {
@@ -36,22 +44,27 @@ contract BuildingManager {
         DataTypes.ResourceProduction resourceProduction;
         uint256 baseConstructionTime;
         bool isAvailable;
+        string imageURI; // New field for image URI
     }
 
     mapping(string => mapping(uint256 => BuildingInfo)) public availableBuildings;
 
+    // Function to calculate upkeep cost based on base cost
     function calculateUpkeepCost(DataTypes.Resources memory baseCost) internal pure returns (DataTypes.Resources memory) {
         return DataTypes.Resources({
-            food: baseCost.food * 5 / 100,
-            wood: baseCost.wood * 5 / 100,
-            stone: baseCost.stone * 5 / 100,
-            brass: baseCost.brass * 5 / 100,
-            iron: baseCost.iron * 5 / 100,
-            gold: baseCost.gold * 5 / 100
+            food: baseCost.food * 2 / 100,
+            wood: baseCost.wood * 2 / 100,
+            stone: baseCost.stone * 2 / 100,
+            brass: baseCost.brass * 2 / 100,
+            iron: baseCost.iron * 2 / 100,
+            gold: baseCost.gold * 2 / 100
         });
     }
 
+    // Initialize all buildings with their respective details and image URIs
     function _initializeBuildings() internal {
+        string memory baseIPFS = "https://ipfs.io/ipfs/QmRGokM3hkPNfZJSdzoEHTk5hh6hejYr2Frw6g1UpRmYpr/";
+
         // Low Output Buildings (Level 1)
         availableBuildings["Farm"][1] = BuildingInfo({
             name: "Farm",
@@ -64,8 +77,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(100, 0, 0, 0, 0, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "farm.webp"))
         });
 
         availableBuildings["Lumber Mill"][1] = BuildingInfo({
@@ -79,8 +93,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 100, 0, 0, 0, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "lumbermill.webp"))
         });
 
         availableBuildings["Quarry"][1] = BuildingInfo({
@@ -94,8 +109,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 100, 0, 0, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "quarry.webp"))
         });
 
         availableBuildings["Iron Mine"][1] = BuildingInfo({
@@ -109,8 +125,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 2,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 100, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "iron_mine.webp"))
         });
 
         availableBuildings["Workshop"][1] = BuildingInfo({
@@ -124,8 +141,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 100, 0, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "workshop.webp"))
         });
 
         availableBuildings["Marketplace"][1] = BuildingInfo({
@@ -139,8 +157,9 @@ contract BuildingManager {
             pietyBoost: 2,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 100),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "marketplace.webp"))
         });
 
         availableBuildings["Barracks"][1] = BuildingInfo({
@@ -154,8 +173,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 5,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "barracks.webp"))
         });
 
         availableBuildings["Temple"][1] = BuildingInfo({
@@ -169,8 +189,9 @@ contract BuildingManager {
             pietyBoost: 7,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "temple.webp"))
         });
 
         availableBuildings["Academy"][1] = BuildingInfo({
@@ -184,8 +205,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "academy.webp"))
         });
 
         availableBuildings["Stables"][1] = BuildingInfo({
@@ -199,8 +221,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 3,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 0),
-            baseConstructionTime: 12 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "stables.webp"))
         });
 
         // High Output Buildings (Level 2) with enhanced stats
@@ -215,8 +238,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(200, 0, 0, 0, 0, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "estate.webp"))
         });
 
         availableBuildings["University"][2] = BuildingInfo({
@@ -230,8 +254,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "university.webp"))
         });
 
         availableBuildings["Cathedral"][2] = BuildingInfo({
@@ -245,9 +270,11 @@ contract BuildingManager {
             pietyBoost: 10,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "cathedral.webp"))
         });
+
         availableBuildings["Sawmill"][2] = BuildingInfo({
             name: "Sawmill",
             level: 2,
@@ -259,8 +286,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 200, 0, 0, 0, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "sawmill.webp"))
         });
 
         availableBuildings["Stoneworks"][2] = BuildingInfo({
@@ -274,8 +302,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 200, 0, 0, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "stoneworks.webp"))
         });
 
         availableBuildings["Steelworks"][2] = BuildingInfo({
@@ -289,8 +318,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 200, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "steelworks.webp"))
         });
 
         availableBuildings["Factory"][2] = BuildingInfo({
@@ -304,8 +334,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 200, 0, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "factory.webp"))
         });
 
         availableBuildings["Trading Post"][2] = BuildingInfo({
@@ -319,8 +350,9 @@ contract BuildingManager {
             pietyBoost: 2,
             strengthBoost: 0,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 200),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "tradingpost.webp"))
         });
 
         availableBuildings["Fortress"][2] = BuildingInfo({
@@ -334,8 +366,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 10,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "fortress.webp"))
         });
 
         availableBuildings["Cavalry School"][2] = BuildingInfo({
@@ -349,8 +382,9 @@ contract BuildingManager {
             pietyBoost: 0,
             strengthBoost: 6,
             resourceProduction: DataTypes.ResourceProduction(0, 0, 0, 0, 0, 0),
-            baseConstructionTime: 24 hours,
-            isAvailable: true
+            baseConstructionTime: 1 hours,
+            isAvailable: true,
+            imageURI: string(abi.encodePacked(baseIPFS, "cavalryschool.webp"))
         });
 
     }
@@ -365,7 +399,7 @@ contract BuildingManager {
         require(bytes(buildingName).length > 0, "Invalid building name");
         BuildingInfo storage building = availableBuildings[buildingName][level];
         require(building.isAvailable, "Building not available");
-
+        
         // Check if the land has enough resources
         require(currentResources.food >= building.baseCost.food, "Not enough food");
         require(currentResources.wood >= building.baseCost.wood, "Not enough wood");
@@ -383,16 +417,19 @@ contract BuildingManager {
         updatedResources.iron -= building.baseCost.iron;
         updatedResources.gold -= building.baseCost.gold;
 
-        // Calculate construction time based on production stat
-        uint256 adjustedTime = building.baseConstructionTime * 50 / production;
+        // Ensure production is not zero to avoid division by zero
+        require(production > 0, "Production must be greater than zero");
+
+        // Calculate construction time with safe bounds
+        uint256 adjustedTime = building.baseConstructionTime * 50 / (production + 1);
         if (adjustedTime < 1 hours) {
             adjustedTime = 1 hours; // Minimum construction time
         } else if (adjustedTime > 2 days) {
             adjustedTime = 2 days; // Maximum construction time
         }
+
         completionTime = block.timestamp + adjustedTime;
     }
-
 
     // Complete construction of buildings that are done
     function completeBuildingConstruction(
@@ -405,6 +442,7 @@ contract BuildingManager {
         strengthBoost = building.strengthBoost;
     }
 
+    // Calculate total resource production based on active buildings and epochs elapsed
     function calculateTotalResourceProduction(DataTypes.Building[] memory buildings, uint256 epochsElapsed) external view returns (DataTypes.Resources memory) {
         DataTypes.Resources memory totalProduction;
 
@@ -430,7 +468,16 @@ contract BuildingManager {
         return totalProduction;
     }
 
+    // Retrieve information about a specific building
     function getBuildingInfo(string memory name, uint256 level) public view returns (BuildingInfo memory) {
         return availableBuildings[name][level];
+    }
+
+    // Optional: Function to update imageURI (if using mutable URIs)
+    function updateBuildingImageURI(string memory buildingName, uint256 level, string memory newImageURI) external onlyOwner {
+        require(bytes(buildingName).length > 0, "Invalid building name");
+        BuildingInfo storage building = availableBuildings[buildingName][level];
+        require(building.isAvailable, "Building not available");
+        building.imageURI = newImageURI;
     }
 }

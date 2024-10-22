@@ -8,6 +8,7 @@ import type {
   FunctionFragment,
   Result,
   Interface,
+  EventFragment,
   AddressLike,
   ContractRunner,
   ContractMethod,
@@ -17,6 +18,7 @@ import type {
   TypedContractEvent,
   TypedDeferredTopicFilter,
   TypedEventLog,
+  TypedLogDescription,
   TypedListener,
   TypedContractMethod,
 } from "../../common";
@@ -33,10 +35,13 @@ export declare namespace DataTypes {
 export interface MapContractInterface extends Interface {
   getFunction(
     nameOrSignature:
-      | "GRID_SIZE"
-      | "MAX_COORDINATE"
-      | "MAX_COORDINATES"
+      | "GRID_HEIGHT"
+      | "GRID_WIDTH"
+      | "MAX_COORDINATE_X"
+      | "MAX_COORDINATE_Y"
+      | "MAX_OWNABLE_COORDINATES"
       | "MIN_COORDINATE"
+      | "assignAdjacentCoordinate"
       | "assignCoordinate"
       | "assignRandomCoordinate"
       | "getAvailableAdjacentCoordinates"
@@ -44,22 +49,43 @@ export interface MapContractInterface extends Interface {
       | "getTokenCoordinates"
       | "isCoordinateOccupied"
       | "landNFTAddress"
+      | "owner"
+      | "renounceOwnership"
       | "setLandNFTAddress"
       | "totalAssignedCoordinates"
+      | "transferOwnership"
+      | "updateLandNFTAddress"
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "GRID_SIZE", values?: undefined): string;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+
   encodeFunctionData(
-    functionFragment: "MAX_COORDINATE",
+    functionFragment: "GRID_HEIGHT",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "MAX_COORDINATES",
+    functionFragment: "GRID_WIDTH",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MAX_COORDINATE_X",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MAX_COORDINATE_Y",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MAX_OWNABLE_COORDINATES",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "MIN_COORDINATE",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "assignAdjacentCoordinate",
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "assignCoordinate",
@@ -89,6 +115,11 @@ export interface MapContractInterface extends Interface {
     functionFragment: "landNFTAddress",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "setLandNFTAddress",
     values: [AddressLike]
@@ -97,18 +128,38 @@ export interface MapContractInterface extends Interface {
     functionFragment: "totalAssignedCoordinates",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateLandNFTAddress",
+    values: [AddressLike]
+  ): string;
 
-  decodeFunctionResult(functionFragment: "GRID_SIZE", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "MAX_COORDINATE",
+    functionFragment: "GRID_HEIGHT",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "GRID_WIDTH", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "MAX_COORDINATE_X",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "MAX_COORDINATES",
+    functionFragment: "MAX_COORDINATE_Y",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "MAX_OWNABLE_COORDINATES",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "MIN_COORDINATE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "assignAdjacentCoordinate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -139,6 +190,11 @@ export interface MapContractInterface extends Interface {
     functionFragment: "landNFTAddress",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "setLandNFTAddress",
     data: BytesLike
@@ -147,6 +203,27 @@ export interface MapContractInterface extends Interface {
     functionFragment: "totalAssignedCoordinates",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateLandNFTAddress",
+    data: BytesLike
+  ): Result;
+}
+
+export namespace OwnershipTransferredEvent {
+  export type InputTuple = [previousOwner: AddressLike, newOwner: AddressLike];
+  export type OutputTuple = [previousOwner: string, newOwner: string];
+  export interface OutputObject {
+    previousOwner: string;
+    newOwner: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export interface MapContract extends BaseContract {
@@ -192,13 +269,23 @@ export interface MapContract extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
-  GRID_SIZE: TypedContractMethod<[], [bigint], "view">;
+  GRID_HEIGHT: TypedContractMethod<[], [bigint], "view">;
 
-  MAX_COORDINATE: TypedContractMethod<[], [bigint], "view">;
+  GRID_WIDTH: TypedContractMethod<[], [bigint], "view">;
 
-  MAX_COORDINATES: TypedContractMethod<[], [bigint], "view">;
+  MAX_COORDINATE_X: TypedContractMethod<[], [bigint], "view">;
+
+  MAX_COORDINATE_Y: TypedContractMethod<[], [bigint], "view">;
+
+  MAX_OWNABLE_COORDINATES: TypedContractMethod<[], [bigint], "view">;
 
   MIN_COORDINATE: TypedContractMethod<[], [bigint], "view">;
+
+  assignAdjacentCoordinate: TypedContractMethod<
+    [tokenId: BigNumberish, existingTokenId: BigNumberish],
+    [[bigint, bigint] & { x: bigint; y: bigint }],
+    "nonpayable"
+  >;
 
   assignCoordinate: TypedContractMethod<
     [tokenId: BigNumberish, x: BigNumberish, y: BigNumberish],
@@ -238,6 +325,10 @@ export interface MapContract extends BaseContract {
 
   landNFTAddress: TypedContractMethod<[], [string], "view">;
 
+  owner: TypedContractMethod<[], [string], "view">;
+
+  renounceOwnership: TypedContractMethod<[], [void], "nonpayable">;
+
   setLandNFTAddress: TypedContractMethod<
     [_landNFTAddress: AddressLike],
     [void],
@@ -246,22 +337,47 @@ export interface MapContract extends BaseContract {
 
   totalAssignedCoordinates: TypedContractMethod<[], [bigint], "view">;
 
+  transferOwnership: TypedContractMethod<
+    [newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  updateLandNFTAddress: TypedContractMethod<
+    [_newLandNFTAddress: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
 
   getFunction(
-    nameOrSignature: "GRID_SIZE"
+    nameOrSignature: "GRID_HEIGHT"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "MAX_COORDINATE"
+    nameOrSignature: "GRID_WIDTH"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
-    nameOrSignature: "MAX_COORDINATES"
+    nameOrSignature: "MAX_COORDINATE_X"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "MAX_COORDINATE_Y"
+  ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "MAX_OWNABLE_COORDINATES"
   ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "MIN_COORDINATE"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "assignAdjacentCoordinate"
+  ): TypedContractMethod<
+    [tokenId: BigNumberish, existingTokenId: BigNumberish],
+    [[bigint, bigint] & { x: bigint; y: bigint }],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "assignCoordinate"
   ): TypedContractMethod<
@@ -300,11 +416,46 @@ export interface MapContract extends BaseContract {
     nameOrSignature: "landNFTAddress"
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
+    nameOrSignature: "owner"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "renounceOwnership"
+  ): TypedContractMethod<[], [void], "nonpayable">;
+  getFunction(
     nameOrSignature: "setLandNFTAddress"
   ): TypedContractMethod<[_landNFTAddress: AddressLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "totalAssignedCoordinates"
   ): TypedContractMethod<[], [bigint], "view">;
+  getFunction(
+    nameOrSignature: "transferOwnership"
+  ): TypedContractMethod<[newOwner: AddressLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "updateLandNFTAddress"
+  ): TypedContractMethod<
+    [_newLandNFTAddress: AddressLike],
+    [void],
+    "nonpayable"
+  >;
 
-  filters: {};
+  getEvent(
+    key: "OwnershipTransferred"
+  ): TypedContractEvent<
+    OwnershipTransferredEvent.InputTuple,
+    OwnershipTransferredEvent.OutputTuple,
+    OwnershipTransferredEvent.OutputObject
+  >;
+
+  filters: {
+    "OwnershipTransferred(address,address)": TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+    OwnershipTransferred: TypedContractEvent<
+      OwnershipTransferredEvent.InputTuple,
+      OwnershipTransferredEvent.OutputTuple,
+      OwnershipTransferredEvent.OutputObject
+    >;
+  };
 }

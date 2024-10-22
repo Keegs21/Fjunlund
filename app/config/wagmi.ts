@@ -1,9 +1,6 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { defineChain } from 'viem';
-import {
-  base,
-  fantomTestnet,
-} from 'wagmi/chains';
+
 
 export const fantomSonicTestnet = /*#__PURE__*/ defineChain({
     id: 64165,
@@ -31,7 +28,6 @@ export const config = getDefaultConfig({
   projectId: '8238d3335e9746ff4cfef0ba18d216c3',
   chains: [
     fantomSonicTestnet,
-    base,
   ],
   ssr: true,
 });
