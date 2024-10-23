@@ -32,6 +32,10 @@ export type { ERC165 } from "./@openzeppelin/contracts/utils/introspection/ERC16
 export { ERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/ERC165__factory";
 export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC165";
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
+export type { ArmyDeck } from "./contracts/ArmyDeck.sol/ArmyDeck";
+export { ArmyDeck__factory } from "./factories/contracts/ArmyDeck.sol/ArmyDeck__factory";
+export type { IUnitNFT } from "./contracts/ArmyDeck.sol/IUnitNFT";
+export { IUnitNFT__factory } from "./factories/contracts/ArmyDeck.sol/IUnitNFT__factory";
 export type { BuildingManager } from "./contracts/BuildingManager";
 export { BuildingManager__factory } from "./factories/contracts/BuildingManager__factory";
 export type { LandNFT } from "./contracts/landNFT.sol/LandNFT";
@@ -48,3 +52,5 @@ export type { ILeaderboard } from "./contracts/rewardsDistributor.sol/ILeaderboa
 export { ILeaderboard__factory } from "./factories/contracts/rewardsDistributor.sol/ILeaderboard__factory";
 export type { RewardsDistributor } from "./contracts/rewardsDistributor.sol/RewardsDistributor";
 export { RewardsDistributor__factory } from "./factories/contracts/rewardsDistributor.sol/RewardsDistributor__factory";
+export type { UnitNFT } from "./contracts/UnitNFT.sol/UnitNFT";
+export { UnitNFT__factory } from "./factories/contracts/UnitNFT.sol/UnitNFT__factory";

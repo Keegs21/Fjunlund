@@ -20,12 +20,17 @@ import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
 import LandNFTABI from '../../artifacts/contracts/landNFT.sol/LandNFT.json';
 import BuildingManagerABI from '../../artifacts/contracts/BuildingManager.sol/BuildingManager.json';
+import UnitNFTABI from '../../artifacts/contracts/UnitNFT.sol/UnitNFT.json';
+import ArmyDeckABI from '../../artifacts/contracts/ArmyDeck.sol/ArmyDeck.json';
 import erc20abi from '../../artifacts/contracts/erc20.sol/erc20.json';
-import { LandNFT, BuildingManager, IERC20 } from '../../typechain-types';
+import { LandNFT, BuildingManager, IERC20, UnitNFT, ArmyDeck } from '../../typechain-types';
 
 const LAND_NFT_CONTRACT = '0xbDAa58F7f2C235DD93a0396D653AEa09116F088d'; 
 const BUILDING_MANAGER_CONTRACT = '0x058aBf1000EF621EEE1bf186ed76B44C8bdBe5d6';
 const ERC20_CONTRACT_ADDRESS = '0x05c5ecee53692524f72e10588a787aed324de367';
+const UNIT_NFT_CONTRACT = '0x782b9f1855d6FA94819B677c2b81D81E5CE715d9';
+const ARMY_DECK_CONTRACT = '0xf8C2b0397f3000aad6678DF64B2d05B0C02fD5b3';
+
 
 export default function Dashboard() {
   const { address } = useAccount();
@@ -34,6 +39,22 @@ export default function Dashboard() {
   const [buildingsInfo, setBuildingsInfo] = useState<BuildingInfo[]>([]);
   const [completingConstruction, setCompletingConstruction] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userUnits, setUserUnits] = useState<UnitData[]>([]);
+  const [userDeck, setUserDeck] = useState<number[]>([]);
+
+
+  interface UnitData {
+    tokenId: number;
+    unitStats: {
+      name: string;
+      attack: number;
+      defense: number;
+      speed: number;
+      range: number;
+      abilities: string;
+      isActive: boolean;
+    };
+  }
 
   interface ResourceProduction {
     foodPerEpoch: number;
@@ -239,11 +260,85 @@ export default function Dashboard() {
     }
   };
 
+  const fetchUserUnits = async () => {
+    try {
+      if (window.ethereum && address) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const unitNFTContract = new ethers.Contract(
+          UNIT_NFT_CONTRACT,
+          UnitNFTABI.abi,
+          signer
+        ) as unknown as UnitNFT;
+        
+  
+        // Fetch the unit IDs owned by the user
+        const unitIds: ethers.BigNumberish[] = await unitNFTContract.getUnitsByOwner(address);
+  
+        const unitsData: UnitData[] = [];
+  
+        for (const id of unitIds) {
+          const tokenId = Number(id);
+  
+          // Fetch unit stats for this tokenId
+          const unit = await unitNFTContract.getUnitStats(tokenId);
+
+          const owner = await unitNFTContract.ownerOf(tokenId);
+          console.log(`Owner of unit ${tokenId}:`, owner);
+
+          const unitStats = await unitNFTContract.getUnitStats(tokenId);
+          console.log(`Unit ${tokenId} stats:`, unitStats);
+  
+          unitsData.push({
+            tokenId,
+            unitStats: {
+              name: unit.name,
+              attack: Number(unit.attack),
+              defense: Number(unit.defense),
+              speed: Number(unit.speed),
+              range: Number(unit.range),
+              abilities: unit.abilities,
+              isActive: unit.isActive,
+            },
+          });
+        }
+  
+        setUserUnits(unitsData);
+      }
+    } catch (error) {
+      console.error('Error fetching user units:', error);
+    }
+  };  
+
+  const fetchUserDeck = async () => {
+    try {
+      if (window.ethereum && address) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const armyDeckContract = new ethers.Contract(
+          ARMY_DECK_CONTRACT,
+          ArmyDeckABI.abi,
+          signer
+        ) as unknown as ArmyDeck;
+  
+        const deckTokenIds = await armyDeckContract.getUserDeck(address);
+        const deck = deckTokenIds.map((id: BigInt) => Number(id));
+        setUserDeck(deck);
+      }
+    } catch (error) {
+      console.error('Error fetching user deck:', error);
+    }
+  };
+  
+
   useEffect(() => {
     if (address) {
       fetchNFTData();
+      fetchUserUnits();
+      fetchUserDeck();
     }
-  }, [address]);
+  }, [address]);  
+  
 
   // Handle dropdown selection change
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -259,6 +354,84 @@ export default function Dashboard() {
     }
     return uri; // Return as-is if it's not an IPFS URI
   };
+
+  const addUnitToDeck = async (unitId: number) => {
+    try {
+      if (!window.ethereum) {
+        alert('Please install MetaMask to interact with this feature.');
+        return;
+      }
+
+      console.log('passed window', window.ethereum);
+  
+      // Check if the unit is already in the deck
+      if (userDeck.includes(unitId)) {
+        alert('This unit is already in your deck.');
+        return;
+      }
+      console.log('passed if already in deck check');
+  
+      // Check deck capacity
+      if (userDeck.length >= 7) {
+        alert('Your deck is full. Remove a unit before adding a new one.');
+        return;
+      }
+
+      console.log('passed deck capacity check');
+  
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const armyDeckContract = new ethers.Contract(
+        ARMY_DECK_CONTRACT,
+        ArmyDeckABI.abi,
+        signer
+      ) as unknown as ArmyDeck;
+      console.log("deck contract", armyDeckContract);
+  
+      console.log('Adding unit to deck:', unitId);
+  
+      // Correct Gas Estimation Syntax for ethers.js v6
+      const estimatedGas = await armyDeckContract.addUnitsToDeck.estimateGas([unitId]);
+  
+      // Send transaction with estimated gas limit
+      const tx = await armyDeckContract.addUnitsToDeck([unitId], { gasLimit: estimatedGas });
+  
+      await tx.wait();
+  
+      fetchUserDeck();
+      alert(`Unit ${unitId} added to deck.`);
+    } catch (error: any) {
+      console.error('Error adding unit to deck:', error);
+      // Display more informative error messages if possible
+      const errorMessage = error?.error?.message || error?.message || 'Unknown error';
+      alert(`Error adding unit to deck: ${errorMessage}`);
+    }
+  };  
+  
+  const removeUnitFromDeck = async (unitId: number) => {
+    try {
+      if (!window.ethereum) {
+        alert('Please install MetaMask to interact with this feature.');
+        return;
+      }
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const armyDeckContract = new ethers.Contract(
+        ARMY_DECK_CONTRACT,
+        ArmyDeckABI.abi,
+        signer
+      ) as unknown as ArmyDeck;
+  
+      const tx = await armyDeckContract.removeUnitsFromDeck([unitId]);
+      await tx.wait();
+  
+      fetchUserDeck();
+      alert(`Unit ${unitId} removed from deck.`);
+    } catch (error) {
+      console.error('Error removing unit from deck:', error);
+      alert('Error removing unit from deck.');
+    }
+  };  
 
   // Function to start building construction
   function StartBuildingButton({
@@ -628,6 +801,144 @@ export default function Dashboard() {
           </TranslucentBox>
 
           <Divider my={6} />
+
+            {/* User Units Section */}
+            <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>
+              <Heading as="h2" size="lg" mb={4} color="secondary.500">
+                Your Units
+              </Heading>
+              {userUnits.length > 0 ? (
+                <Flex wrap="wrap" gap={4}>
+                  {userUnits.map((unit) => {
+                    const inDeck = userDeck.includes(unit.tokenId);
+                    return (
+                      <Box
+                        key={unit.tokenId}
+                        p={4}
+                        borderWidth="1px"
+                        borderRadius="md"
+                        shadow="md"
+                        width={{ base: '100%', sm: '45%', md: '30%' }}
+                        bg="primary.300"
+                      >
+                        <VStack align="start" spacing={3}>
+                          {/* Unit Image */}
+                          <Image
+                            src={`/images/${unit.unitStats.name.toLowerCase()}.webp`}
+                            alt={`${unit.unitStats.name} Image`}
+                            boxSize="100px"
+                            objectFit="cover"
+                            borderRadius="md"
+                            shadow="sm"
+                            fallback={<Spinner size="sm" />}
+                            onError={(e) => {
+                              e.currentTarget.src = '/bg.webp'; // Fallback image
+                            }}
+                          />
+
+                          {/* Unit Details */}
+                          <Text fontSize="md">
+                            <strong>{unit.unitStats.name}</strong>
+                          </Text>
+                          <Text fontSize="sm">Token ID: {unit.tokenId}</Text>
+                          <Text fontSize="sm">Attack: {unit.unitStats.attack}</Text>
+                          <Text fontSize="sm">Defense: {unit.unitStats.defense}</Text>
+                          <Text fontSize="sm">Speed: {unit.unitStats.speed}</Text>
+                          <Text fontSize="sm">Range: {unit.unitStats.range}</Text>
+                          <Text fontSize="sm">Abilities: {unit.unitStats.abilities}</Text>
+                          <Text fontSize="sm">
+                            Status: {unit.unitStats.isActive ? 'Active' : 'Inactive'}
+                          </Text>
+
+                          {/* Add or Remove Button */}
+                          {inDeck ? (
+                            <Button
+                              colorScheme="red"
+                              onClick={() => removeUnitFromDeck(unit.tokenId)}
+                            >
+                              Remove from Deck
+                            </Button>
+                          ) : (
+                            <Button
+                              colorScheme="green"
+                              onClick={() => addUnitToDeck(unit.tokenId)}
+                              isDisabled={!unit.unitStats.isActive}
+                            >
+                              Add to Deck
+                            </Button>
+                          )}
+                        </VStack>
+                      </Box>
+                    );
+                  })}
+                </Flex>
+              ) : (
+                <Text fontSize="md">You don't own any units.</Text>
+              )}
+            </TranslucentBox>
+
+            <Divider my={6} />
+
+            {/* User Deck Section */}
+            <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>
+              <Heading as="h2" size="lg" mb={4} color="secondary.500">
+                Your Army Deck
+              </Heading>
+              {userDeck.length > 0 ? (
+                <Flex wrap="wrap" gap={4}>
+                  {userUnits
+                    .filter((unit) => userDeck.includes(unit.tokenId))
+                    .map((unit) => (
+                      <Box
+                        key={unit.tokenId}
+                        p={4}
+                        borderWidth="1px"
+                        borderRadius="md"
+                        shadow="md"
+                        width={{ base: '100%', sm: '45%', md: '30%' }}
+                        bg="primary.300"
+                      >
+                        <VStack align="start" spacing={3}>
+                          {/* Unit Image */}
+                          <Image
+                            src={`/images/${unit.unitStats.name.toLowerCase()}.webp`}
+                            alt={`${unit.unitStats.name} Image`}
+                            boxSize="100px"
+                            objectFit="cover"
+                            borderRadius="md"
+                            shadow="sm"
+                            fallback={<Spinner size="sm" />}
+                            onError={(e) => {
+                              e.currentTarget.src = '/placeholder-image.png'; // Fallback image
+                            }}
+                          />
+
+                          {/* Unit Details */}
+                          <Text fontSize="md">
+                            <strong>{unit.unitStats.name}</strong>
+                          </Text>
+                          <Text fontSize="sm">Token ID: {unit.tokenId}</Text>
+                          <Text fontSize="sm">Attack: {unit.unitStats.attack}</Text>
+                          <Text fontSize="sm">Defense: {unit.unitStats.defense}</Text>
+                          <Text fontSize="sm">Speed: {unit.unitStats.speed}</Text>
+                          <Text fontSize="sm">Range: {unit.unitStats.range}</Text>
+                          <Text fontSize="sm">Abilities: {unit.unitStats.abilities}</Text>
+
+                          {/* Remove from Deck Button */}
+                          <Button
+                            colorScheme="red"
+                            onClick={() => removeUnitFromDeck(unit.tokenId)}
+                          >
+                            Remove from Deck
+                          </Button>
+                        </VStack>
+                      </Box>
+                    ))}
+                </Flex>
+              ) : (
+                <Text fontSize="md">Your deck is empty.</Text>
+              )}
+            </TranslucentBox>
 
           {/* Under Construction Buildings */}
           <TranslucentBox bg="rgba(78, 211, 255, 0.8)" width="100%" mt={6}>

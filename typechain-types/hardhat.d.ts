@@ -66,6 +66,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC165__factory>;
     getContractFactory(
+      name: "ArmyDeck",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ArmyDeck__factory>;
+    getContractFactory(
+      name: "IUnitNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IUnitNFT__factory>;
+    getContractFactory(
       name: "BuildingManager",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.BuildingManager__factory>;
@@ -101,6 +109,14 @@ declare module "hardhat/types/runtime" {
       name: "RewardsDistributor",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.RewardsDistributor__factory>;
+    getContractFactory(
+      name: "ILandNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ILandNFT__factory>;
+    getContractFactory(
+      name: "UnitNFT",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.UnitNFT__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -168,6 +184,16 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC165>;
     getContractAt(
+      name: "ArmyDeck",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ArmyDeck>;
+    getContractAt(
+      name: "IUnitNFT",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IUnitNFT>;
+    getContractAt(
       name: "BuildingManager",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
@@ -212,6 +238,16 @@ declare module "hardhat/types/runtime" {
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.RewardsDistributor>;
+    getContractAt(
+      name: "ILandNFT",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ILandNFT>;
+    getContractAt(
+      name: "UnitNFT",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.UnitNFT>;
 
     deployContract(
       name: "Ownable",
@@ -266,6 +302,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC165>;
     deployContract(
+      name: "ArmyDeck",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ArmyDeck>;
+    deployContract(
+      name: "IUnitNFT",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IUnitNFT>;
+    deployContract(
       name: "BuildingManager",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.BuildingManager>;
@@ -301,6 +345,14 @@ declare module "hardhat/types/runtime" {
       name: "RewardsDistributor",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.RewardsDistributor>;
+    deployContract(
+      name: "ILandNFT",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ILandNFT>;
+    deployContract(
+      name: "UnitNFT",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.UnitNFT>;
 
     deployContract(
       name: "Ownable",
@@ -368,6 +420,16 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.IERC165>;
     deployContract(
+      name: "ArmyDeck",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ArmyDeck>;
+    deployContract(
+      name: "IUnitNFT",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IUnitNFT>;
+    deployContract(
       name: "BuildingManager",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
@@ -412,6 +474,16 @@ declare module "hardhat/types/runtime" {
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.RewardsDistributor>;
+    deployContract(
+      name: "ILandNFT",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.ILandNFT>;
+    deployContract(
+      name: "UnitNFT",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.UnitNFT>;
 
     // default types
     getContractFactory(

@@ -1,0 +1,123 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IUnitNFT",
+  "sourceName": "contracts/ArmyDeck.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getUnitStats",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "attack",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "defense",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "speed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "range",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "abilities",
+              "type": "string"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "food",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "wood",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "stone",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "brass",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "iron",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "gold",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct DataTypes.Resources",
+              "name": "upkeepCost",
+              "type": "tuple"
+            },
+            {
+              "internalType": "bool",
+              "name": "isActive",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct IUnitNFT.Unit",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

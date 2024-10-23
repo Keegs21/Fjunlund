@@ -1038,6 +1038,87 @@
         "ILeaderboard",
         "RewardsDistributor"
       ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/ArmyDeck.sol": {
+      "lastModificationDate": 1729711891539,
+      "contentHash": "0196f5bc0ea5283473d66ed5b32ef4be",
+      "sourceName": "contracts/ArmyDeck.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./DataTypes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "ArmyDeck",
+        "IUnitNFT"
+      ]
+    },
+    "/Users/keegangrabhorn/Fjunlund/fjunlund/contracts/UnitNFT.sol": {
+      "lastModificationDate": 1729711297722,
+      "contentHash": "112a92c9d0a02451c4a44d47b2bee889",
+      "sourceName": "contracts/UnitNFT.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "viaIR": true,
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./DataTypes.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "ILandNFT",
+        "UnitNFT"
+      ]
     }
   }
 }
