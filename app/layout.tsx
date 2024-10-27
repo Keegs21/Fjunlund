@@ -20,6 +20,7 @@ const PoppinsFont = Poppins({
   display: "swap",
   variable: "--body-font",
 });
+
 export default function RootLayout({
   children,
 }: Readonly<{
