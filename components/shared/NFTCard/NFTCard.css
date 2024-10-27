@@ -1,0 +1,81 @@
+/* NFTCard.css */
+
+/* Card Container */
+.nft-card {
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(var(--n0), 0.1);
+    background-color: rgb(var(--n5)); /* Sleek Black Grey */
+    color: rgb(var(--n1)); /* White */
+  }
+  
+  /* NFT Image */
+  .nft-image {
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  /* Building List Items */
+  .building-item {
+    cursor: pointer;
+    background-color: transparent;
+    color: rgb(var(--n1)); /* White */
+    border: none;
+    position: relative;
+  }
+  
+  /* Building Popup */
+  .building-popup {
+    background-color: rgb(var(--n4)); /* Very Dark Grey */
+    border: 1px solid rgb(var(--s1)); /* Medium Blue */
+    padding: 10px;
+    width: 220px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(var(--n0), 0.1);
+    top: 0;
+    left: 100%;
+    margin-left: 10px;
+  }
+  
+  .building-popup p {
+    margin: 0;
+    font-size: 0.9em;
+    color: rgb(var(--n1)); /* White */
+  }
+  
+  /* Card Title */
+  .card-title {
+    color: rgb(var(--p2)); /* Vibrant Blue */
+  }
+  
+  /* Card Text */
+  .card-text {
+    color: rgb(var(--n1)); /* White */
+  }
+  
+  /* Section Headings */
+  .fw-bold {
+    color: rgb(var(--p1)); /* Deep Blue */
+  }
+  
+  /* List Items */
+  ul.list-unstyled li {
+    color: rgb(var(--n1)); /* White */
+  }
+  
+  /* Coordinates */
+  .ms-2 {
+    color: rgb(var(--n1)); /* White */
+  }
+  
+  /* Button Styles */
+  .btn-primary {
+    background-color: rgb(var(--p2)); /* Vibrant Blue */
+    border-color: rgb(var(--p2)); /* Vibrant Blue */
+  }
+  
+  .btn-primary:hover {
+    background-color: rgb(var(--s1)); /* Medium Blue */
+    border-color: rgb(var(--s1)); /* Medium Blue */
+  }
+  
