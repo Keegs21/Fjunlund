@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   title: "Fjunlund",
   description: "A Decentralized NFT Gaming Platform",
 };
-
 const ChakraPetch = Chakra_Petch({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
