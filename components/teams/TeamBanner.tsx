@@ -46,13 +46,13 @@ const Banner = () => {
 
           const tokens: number[] = [];
 
-          for (let i = 0; i < balance; i++) {
-            const tokenIdBN = await landNFTContract.tokenOfOwnerByIndex(address, i);
+          if (balance > 0) {
+            const tokenIdBN = await landNFTContract.tokenOfOwnerByIndex(address, 0);
             const tokenId = Number(tokenIdBN);
-            tokens.push(tokenId);
+            setUserTokens([tokenId]);
+          } else {
+            setUserTokens([]);
           }
-
-          setUserTokens(tokens);
         }
       } catch (error) {
         console.error("Error fetching user tokens:", error);

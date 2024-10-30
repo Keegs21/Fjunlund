@@ -6,7 +6,8 @@ import "../public/scss/style.scss";
 import Bootstrap from "../components/shared/Bootstrap";
 import { ThirdwebProvider } from "thirdweb/react";
 import { WagmiProvider } from 'wagmi'; // Updated to WagmiConfig
-import { config } from '../wagmiConfig';
+import { config, fantomSonicTestnet } from '../wagmiConfig'; // Adjust the import path accordingly
+import {sepolia} from "thirdweb/chains";
 
 
 // export const metadata: Metadata = {
@@ -28,13 +29,15 @@ const PoppinsFont = Poppins({
   variable: "--body-font",
 });
 
+const thirdwebChains: ThirdwebChain[] = [fantomSonicTestnet] as any; // Type assertion if needed
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <ThirdwebProvider>
+    <ThirdwebProvider supportedChains={sepolia}>
       <WagmiProvider config={config}>
         <html lang="en">
           <Bootstrap>

@@ -1,22 +1,18 @@
 "use client";
 import bitcoin from "@/public/img/bitcoin.png";
-import diamond from "@/public/img/fjt-removebg.png";
 import gameConsole from "@/public/img/nft-marker.png";
 import tether from "@/public/img/tether.png";
 import tournament1 from "@/public/img/frozen.webp";
 import tournament2 from "@/public/img/desert.webp";
 import tournament3 from "@/public/img/forest.webp";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
 
 const tournaments = [
   {
     id: 1,
     img: tournament1,
-    title: "Nothern Lands",
+    title: "Northern Lands",
   },
   {
     id: 2,
@@ -31,49 +27,10 @@ const tournaments = [
 ];
 
 const Tournaments = () => {
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    gsap.to(".diamond-area", {
-      scrollTrigger: {
-        trigger: "#tournament-hero",
-        start: "top 40%",
-        end: "+=1000",
-        scrub: 1,
-      },
-      top: "80%",
-      opacity: 1,
-    });
-    gsap.to(".game-console-area", {
-      scrollTrigger: {
-        trigger: "#tournament-hero",
-        start: "top 50%",
-        end: "+=1000",
-        scrub: 1,
-      },
-      top: "80%",
-      opacity: 1,
-      right: "0%",
-      left: "unset",
-    });
-
-    // Clean up on component unmount
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => {
-        trigger.kill(); // Kill all ScrollTriggers
-      });
-    };
-  }, []);
   return (
     <section className="tournament-section pb-120" id="tournament-hero">
-      {/* <!-- Diamond animation --> */}
-      <div className="diamond-area">
-        <Image className="w-100" src={diamond} alt="diamond" />
-      </div>
-      {/* <!-- game console animation --> */}
-      <div className="game-console-area">
-        <Image className="w-100" src={gameConsole} alt="game-console" />
-      </div>
+      {/* Removed diamond animation */}
+      {/* Removed game console animation */}
       <div className="red-ball top-50"></div>
       <div className="tournament-wrapper">
         <div className="tournament-wrapper-border">
@@ -81,7 +38,7 @@ const Tournaments = () => {
             <div className="row justify-content-between align-items-center gy-sm-0 gy-4 mb-15">
               <div className="col-md-6 col-sm-8">
                 <h2 className="display-four tcn-1 cursor-scale growUp title-anim">
-                  Land NFTs
+                  LAND NFTs
                 </h2>
               </div>
               <div className="col-md-6 col-sm-4 text-sm-end">
@@ -117,53 +74,16 @@ const Tournaments = () => {
                       <div className="hr-line line3"></div>
                       <div className="card-info d-flex align-items-center gap-3 flex-wrap my-5">
                         <div className="price-money bgn-3 d-flex align-items-center gap-3 py-2 px-3 h-100">
-                          <div className="d-flex align-items-center gap-2">
-                            <Image
-                              className="w-100"
-                              src={bitcoin}
-                              alt="bitcoin"
-                            />
-                            <span className="tcn-1 fs-sm">75</span>
-                          </div>
-                          <div className="v-line"></div>
-                          <div className="d-flex align-items-center gap-2">
-                            <Image
-                              className="w-100"
-                              src={tether}
-                              alt="tether"
-                            />
-                            <span className="tcn-1 fs-sm">$49.97</span>
-                          </div>
-                        </div>
                         <div className="ticket-fee bgn-3 d-flex align-items-center gap-1 py-2 px-3 h-100">
                           <i className="ti ti-ticket fs-base tcp-2"></i>
                           <span className="tcn-1 fs-sm">Free Entry</span>
                         </div>
-                        <div className="date-time bgn-3 d-flex align-items-center gap-1 py-2 px-3 h-100">
-                          <i className="ti ti-calendar fs-base tcn-1"></i>
-                          <span className="tcn-1 fs-sm">OCT 07, 5:10 AM</span>
                         </div>
-                      </div>
-                      <div className="hr-line line3"></div>
-                      <div className="card-more-info d-between mt-6">
-                        <div className="teams-info d-between gap-xl-5 gap-3">
-                          <div className="teams d-flex align-items-center gap-1">
-                            <i className="ti ti-users fs-base"></i>
-                            <span className="tcn-6 fs-sm">12/12 Teams</span>
-                          </div>
-                          <div className="player d-flex align-items-center gap-1">
-                            <i className="ti ti-user fs-base"></i>
-                            <span className="tcn-6 fs-sm">128 Players</span>
-                          </div>
                         </div>
-                        <Link href={`/tournaments/${id}`} className="btn2">
-                          <i className="ti ti-arrow-right fs-2xl"></i>
-                        </Link>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </div>

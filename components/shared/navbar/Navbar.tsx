@@ -10,7 +10,14 @@ import Wallet from "./Wallet";
 import favicon from "@/public/img/favicon.png";
 import Image from "next/image";
 
-const menuData = [
+type MenuItem = {
+  id: number;
+  title: string;
+  url?: string;
+  submenus?: submenuType[];
+};
+
+const menuData: MenuItem[] = [
   {
     id: 1,
     title: "Home",
@@ -19,13 +26,7 @@ const menuData = [
   {
     id: 2,
     title: "Mint",
-    submenus: [
-      {
-        id: 1,
-        title: "NFTs",
-        url: "/tournaments/",
-      },
-    ],
+    url: "/tournaments/",
   },
   {
     id: 3,
@@ -168,7 +169,7 @@ const Navbar = ({ isTransparent }: { isTransparent?: boolean }) => {
                       >
                         <button className="text-capitalize">{title}</button>
                         <ul className="sub-menu">
-                          {submenus?.map(({ id, title, url }) => (
+                          {submenus?.map(({ id, title, url }: submenuType) => (
                             <li key={id} className="menu-link">
                               <Link
                                 className={clsx(pathname == url && "active")}

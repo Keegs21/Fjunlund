@@ -548,22 +548,22 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
     <div className="nft-card card mb-3">
       <div className="row g-0">
         {/* Image Section */}
-        <div className="col-md-4 d-flex flex-column align-items-center justify-content-center p-3">
+        <div className="col-md-4 d-flex flex-column align-items-center justify-content-center p-4">
           <Image
-            src={`/images/land/${nftData.landStats.population}.webp`} // Example: dynamic image based on population
+            src={`/img/forest.webp`} // Example: dynamic image based on population
             alt={`Land NFT #${tokenId}`}
-            width={200}
-            height={200}
+            width={250} // Increased size for better visibility
+            height={250}
             className="img-fluid rounded-start nft-image"
             onError={(e) => {
               e.currentTarget.src = "/img/bg.webp"; // Fallback image
             }}
           />
 
-          {/* Buildings List */}
-          <div className="mt-4 w-100 position-relative">
-            <h6 className="fw-bold mb-2">Buildings</h6>
-            <ul className="list-group list-group-flush">
+          {/* Buildings Grid */}
+          <div className="mt-4 w-100">
+            <h6 className="fw-bold mb-2 text-center">Buildings</h6>
+            <div className="row g-3">
               {nftData.landStats.buildings.map((building, index) => {
                 // Find the corresponding BuildingInfo for the current building
                 const buildingInfo = buildingsInfo.find(
@@ -571,75 +571,72 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                 );
 
                 // If BuildingInfo is found, format the image URI; else, use a placeholder
-                const imageURI = buildingInfo ? formatIPFS(buildingInfo.imageURI) : "/img/placeholder.webp";
+                const imageURI = buildingInfo ? formatIPFS(buildingInfo.imageURI) : "";
 
                 return (
-                  <li
-                    key={index}
-                    className="list-group-item building-item d-flex align-items-center"
-                    tabIndex={0} // Makes the <li> focusable
-                    aria-describedby={`tooltip-${index}`} // Associates tooltip with the list item
-                  >
-                    <Image
-                      src={imageURI}
-                      alt={`${building.name} Image`}
-                      width={48} // Increased size for better visibility
-                      height={48}
-                      className="me-2"
-                      onError={(e) => {
-                        e.currentTarget.src = "/img/placeholder.webp"; // Fallback image
-                      }}
-                      loading="lazy" // Enables lazy loading
-                    />
-                    <div className="building-info">
-                      <h6 id={`tooltip-${index}`}>{building.name} (Level {building.level})</h6>
-                      {buildingInfo && (
-                        <div className="tooltip-text" role="tooltip">
-                          <strong>Output:</strong>
-                          <ul className="list-unstyled mb-1">
-                            {Object.entries(buildingInfo.resourceProduction)
-                              .filter(([resource, amount]) => amount > 0)
-                              .map(([resource, amount], idx) => (
-                                <li key={idx}>
-                                  {capitalize(resource)}: {amount} per epoch
-                                </li>
-                              ))}
-                          </ul>
-                          <strong>Upkeep:</strong>
-                          <ul className="list-unstyled">
-                            {Object.entries(buildingInfo.upkeepCost)
-                              .filter(([resource, amount]) => amount > 0)
-                              .map(([resource, amount], idx) => (
-                                <li key={idx}>
-                                  {capitalize(resource)}: {amount}
-                                </li>
-                              ))}
-                          </ul>
-                          <strong>Stat Boosts:</strong>
-                          <ul className="list-unstyled">
-                            {buildingInfo.productionBoost > 0 && (
-                              <li>{capitalize("production")} Boost: +{buildingInfo.productionBoost}</li>
-                            )}
-                            {buildingInfo.happinessBoost > 0 && (
-                              <li>{capitalize("happiness")} Boost: +{buildingInfo.happinessBoost}</li>
-                            )}
-                            {buildingInfo.technologyBoost > 0 && (
-                              <li>{capitalize("technology")} Boost: +{buildingInfo.technologyBoost}</li>
-                            )}
-                            {buildingInfo.pietyBoost > 0 && (
-                              <li>{capitalize("piety")} Boost: +{buildingInfo.pietyBoost}</li>
-                            )}
-                            {buildingInfo.strengthBoost > 0 && (
-                              <li>{capitalize("strength")} Boost: +{buildingInfo.strengthBoost}</li>
-                            )}
-                          </ul>
-                        </div>
-                      )}
+                  <div key={index} className="col-6 col-md-4">
+                    <div className="building-item d-flex flex-column align-items-center text-center">
+                      <Image
+                        src={imageURI}
+                        alt={`${building.name} Image`}
+                        width={64} // Increased size for better visibility
+                        height={64}
+                        className="mb-2 building-image"
+                        onError={(e) => {
+                          e.currentTarget.src = ""; // Fallback image
+                        }}
+                        loading="lazy" // Enables lazy loading
+                      />
+                      <div className="building-info text-center">
+                        <h6 className="mb-1">{building.name} (Level {building.level})</h6>
+                        {buildingInfo && (
+                          <div className="tooltip-text" role="tooltip">
+                            <strong>Output:</strong>
+                            <ul className="list-unstyled mb-1">
+                              {Object.entries(buildingInfo.resourceProduction)
+                                .filter(([resource, amount]) => amount > 0)
+                                .map(([resource, amount], idx) => (
+                                  <li key={idx}>
+                                    {capitalize(resource)}: {amount} per epoch
+                                  </li>
+                                ))}
+                            </ul>
+                            <strong>Upkeep:</strong>
+                            <ul className="list-unstyled">
+                              {Object.entries(buildingInfo.upkeepCost)
+                                .filter(([resource, amount]) => amount > 0)
+                                .map(([resource, amount], idx) => (
+                                  <li key={idx}>
+                                    {capitalize(resource)}: {amount}
+                                  </li>
+                                ))}
+                            </ul>
+                            <strong>Stat Boosts:</strong>
+                            <ul className="list-unstyled">
+                              {buildingInfo.productionBoost > 0 && (
+                                <li>{capitalize("production")} Boost: +{buildingInfo.productionBoost}</li>
+                              )}
+                              {buildingInfo.happinessBoost > 0 && (
+                                <li>{capitalize("happiness")} Boost: +{buildingInfo.happinessBoost}</li>
+                              )}
+                              {buildingInfo.technologyBoost > 0 && (
+                                <li>{capitalize("technology")} Boost: +{buildingInfo.technologyBoost}</li>
+                              )}
+                              {buildingInfo.pietyBoost > 0 && (
+                                <li>{capitalize("piety")} Boost: +{buildingInfo.pietyBoost}</li>
+                              )}
+                              {buildingInfo.strengthBoost > 0 && (
+                                <li>{capitalize("strength")} Boost: +{buildingInfo.strengthBoost}</li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </li>
+                  </div>
                 );
               })}
-            </ul>
+            </div>
           </div>
         </div>
 
@@ -679,13 +676,13 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                 </ul>
               </div>
 
-              {/* Resources, Upkeep, and Output in a Single Row */}
-              <div className="col-md-8">
-                <h6 className="fw-bold">Resources</h6>
-                <div className="d-flex justify-content-between">
+              {/* Resources, Upkeep, Output, and Stat Boosts in a Single Row */}
+              <div className="col-md-9">
+                <div className="row">
                   {/* Resources */}
-                  <div className="resources-section">
-                    <ul className="list-unstyled">
+                  <div className="col-md-3">
+                    <h6 className="fw-bold">Resources</h6>
+                    <ul className="list-unstyled resource-list">
                       {Object.entries(nftData.landStats.resources)
                         .filter(([resource, amount]) => amount > 0) // Filter out resources with 0
                         .map(([resource, amount], index) => (
@@ -693,11 +690,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                             <Image
                               src={resourceImages[resource.toLowerCase()]}
                               alt={`${resource} Icon`}
-                              width={24}
-                              height={24}
-                              className="me-2"
+                              width={32} // Increased size
+                              height={32}
+                              className="me-2 resource-icon"
                               onError={(e) => {
-                                e.currentTarget.src = "/img/placeholder.webp"; // Fallback image
+                                e.currentTarget.src = ""; // Fallback image
                               }}
                             />
                             <strong className="me-1">{capitalize(resource)}:</strong> {amount}
@@ -707,9 +704,9 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                   </div>
 
                   {/* Total Upkeep Cost */}
-                  <div className="upkeep-section">
+                  <div className="col-md-3">
                     <h6 className="fw-bold">Total Upkeep Cost</h6>
-                    <ul className="list-unstyled">
+                    <ul className="list-unstyled upkeep-list">
                       {Object.entries(totalUpkeep)
                         .filter(([resource, amount]) => amount > 0) // Filter out costs with 0
                         .map(([resource, amount], index) => (
@@ -717,11 +714,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                             <Image
                               src={resourceImages[resource.toLowerCase()]}
                               alt={`${resource} Icon`}
-                              width={24}
-                              height={24}
-                              className="me-2"
+                              width={32} // Increased size
+                              height={32}
+                              className="me-2 resource-icon"
                               onError={(e) => {
-                                e.currentTarget.src = "/img/placeholder.webp"; // Fallback image
+                                e.currentTarget.src = ""; // Fallback image
                               }}
                             />
                             <strong className="me-1">{capitalize(resource)}:</strong> {amount}
@@ -731,9 +728,9 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                   </div>
 
                   {/* Total Output */}
-                  <div className="output-section">
+                  <div className="col-md-3">
                     <h6 className="fw-bold">Total Output</h6>
-                    <ul className="list-unstyled">
+                    <ul className="list-unstyled output-list">
                       {Object.entries(totalOutput)
                         .filter(([resource, amount]) => amount > 0) // Filter out outputs with 0
                         .map(([resource, amount], index) => (
@@ -741,11 +738,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                             <Image
                               src={resourceImages[resource.toLowerCase()]}
                               alt={`${resource} Icon`}
-                              width={24}
-                              height={24}
-                              className="me-2"
+                              width={32} // Increased size
+                              height={32}
+                              className="me-2 resource-icon"
                               onError={(e) => {
-                                e.currentTarget.src = "/img/placeholder.webp"; // Fallback image
+                                e.currentTarget.src = ""; // Fallback image
                               }}
                             />
                             <strong className="me-1">{capitalize(resource)}:</strong> {amount}
@@ -753,18 +750,20 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                         ))}
                     </ul>
                   </div>
-                  {/* Total Boosts */}
-                  <div className="output-section">
+
+                  {/* Total Stat Boosts */}
+                  <div className="col-md-3">
                     <h6 className="fw-bold">Total Stat Boosts</h6>
-                    <ul className="list-unstyled">
+                    <ul className="list-unstyled stat-boost-list">
                       {Object.entries(totalStatBoosts)
-                        .filter(([resource, amount]) => amount > 0) // Filter out outputs with 0
+                        .filter(([resource, amount]) => amount > 0) // Filter out boosts with 0
                         .map(([resource, amount], index) => (
-                          <li key={index} className="d-flex align-items-center mb-2">
+                          <li key={index} className="mb-2">
                             <strong className="me-1">{capitalize(resource)}:</strong> +{amount}
                           </li>
                         ))}
                     </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -799,13 +798,13 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                       return (
                         <li
                           key={index}
-                          className={`list-group-item p-1 d-flex justify-content-between align-items-center ${isCompleted ? "completed" : ""}`}
+                          className={`list-group-item p-2 d-flex justify-content-between align-items-center ${isCompleted ? "completed" : ""}`}
                           style={{ position: 'relative' }} // Ensure the parent is relative for absolute positioning
                         >
                           <div className="building-info">
                             <h6>{construction.name} (Level {construction.level})</h6>
                             {/* Remove Tooltip from Buildings Under Construction */}
-                            {/* Tooltip has been moved to Buildings List */}
+                            {/* Tooltip has been moved to Buildings Grid */}
                           </div>
                           <span>{getTimeLeft(construction.completionTime)}</span>
                         </li>
@@ -816,7 +815,7 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                   {/* Complete Construction Button */}
                   {canCompleteConstructions && (
                     <button
-                      className={`btn btn-primary mt-3 ${completeLoading ? "disabled" : ""}`}
+                      className={`btn btn-${completeLoading ? "secondary" : "primary"} mt-3`}
                       onClick={completeConstructions}
                       disabled={completeLoading}
                     >
@@ -856,11 +855,11 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
                       <Image
                         src={formatIPFS(selectedBuilding.imageURI)}
                         alt={`${selectedBuilding.name} Image`}
-                        width={150}
-                        height={150}
-                        className="img-fluid rounded-start"
+                        width={200} // Increased size for better visibility
+                        height={200}
+                        className="img-fluid rounded-start building-image"
                         onError={(e) => {
-                          e.currentTarget.src = "/img/placeholder.webp"; // Fallback image
+                          e.currentTarget.src = ""; // Fallback image
                         }}
                       />
                     </div>
@@ -962,7 +961,6 @@ const NFTCard: React.FC<NFTCardProps> = ({ tokenId }) => {
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };

@@ -58,7 +58,7 @@ const Tournaments = () => {
   const nftDetails = [
     {
       id: 1,
-      img: "/images/Fjunland.webp",
+      img: "/img/forest.webp",
       title: "Fjunlund Land Parcel",
       description: "Own a piece of Fjunlund and begin your adventure.",
       price: mintPrice, // ETH
@@ -134,35 +134,41 @@ const Tournaments = () => {
     <section className="tournament-section pb-120 pt-120 mt-lg-0 mt-sm-15 mt-10">
       <div className="tournament-wrapper alt">
         <div className="container">
-          <div className="row justify-content-between align-items-end mb-8">
-            <div className="col">
+          {/* Header */}
+          <div className="row justify-content-center align-items-end mb-8">
+            <div className="col text-center"> {/* Added text-center */}
               <h2 className="display-four tcn-1 cursor-scale growUp title-anim">
                 Mint Land NFT
               </h2>
             </div>
           </div>
+
+          {/* NFT Cards */}
           <div className="singletab tournaments-tab">
             <div className="tabcontents">
               <div className={clsx("tabitem", "active")}>
-                <div className="row justify-content-md-start justify-content-center g-6">
+                <div className="row justify-content-center g-6"> {/* Centered row */}
                   {nftData.map((nft) => (
-                    <div
-                      key={nft.id}
-                      className="col-xl-4 col-md-6 col-sm-10"
-                    >
-                      <div className="tournament-card p-xl-4 p-3 pb-xl-8 bgn-4">
+                    <div key={nft.id} className="col-12"> {/* Full width */}
+                      <div
+                        className="tournament-card p-xl-4 p-3 pb-xl-8 bgn-4 mx-auto" // Added mx-auto to center the card
+                        style={{ width: "100%", maxWidth: "900px" }} // Set card width to 100% with maxWidth
+                      >
+                        {/* Main NFT Image */}
                         <div className="tournament-img mb-8 position-relative">
                           <div className="img-area overflow-hidden">
                             <Image
-                              className="w-100"
-                              width={100}
-                              height={100}
+                              className="w-100 d-block mx-auto" // Center the image
                               src={nft.img}
                               alt={nft.title}
+                              width={600} // Set a higher width for better visibility
+                              height={400} // Adjust height to maintain aspect ratio
                             />
                           </div>
                         </div>
-                        <div className="tournament-content px-xxl-4">
+
+                        {/* NFT Content */}
+                        <div className="tournament-content px-4 text-center"> {/* Added text-center */}
                           <div className="tournament-info mb-5">
                             <h4 className="tournament-title tcn-1 mb-1 cursor-scale growDown title-anim">
                               {nft.title}
@@ -172,7 +178,7 @@ const Tournaments = () => {
                             </span>
                           </div>
                           <div className="hr-line line3"></div>
-                          <div className="card-info d-flex align-items-center gap-3 flex-wrap my-5">
+                          <div className="card-info d-flex align-items-center justify-content-center gap-3 flex-wrap my-5"> {/* Centered info */}
                             <div className="price-money bgn-3 d-flex align-items-center gap-3 py-2 px-3 h-100">
                               <span className="tcn-1 fs-sm">
                                 Price: {nft.price} ETH
@@ -180,10 +186,10 @@ const Tournaments = () => {
                             </div>
                           </div>
                           <div className="hr-line line3"></div>
-                          <div className="card-more-info d-between mt-6">
-                            <div>{/* Additional info if needed */}</div>
+                          <div className="card-more-info d-flex justify-content-center mt-6"> {/* Centered button */}
                             <button
-                              className="btn-half-border position-relative d-inline-block py-2 bgp-1 px-6 rounded-pill"
+                              className="btn-half-border position-relative d-block w-100 py-2 bgp-1 rounded-pill"
+                              style={{ maxWidth: "300px" }} // Optional: Set maxWidth
                               onClick={mintNFT}
                               disabled={isMinting || loading || !address}
                             >
@@ -194,6 +200,7 @@ const Tournaments = () => {
                       </div>
                     </div>
                   ))}
+
                   {/* Handle loading and minting states */}
                   {loading && (
                     <div className="col-12 text-center">

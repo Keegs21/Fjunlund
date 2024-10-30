@@ -7,60 +7,99 @@
   box-shadow: 0 4px 8px rgba(var(--n0), 0.1);
   background-color: rgb(var(--n5)); /* Sleek Black Grey */
   color: rgb(var(--n1)); /* White */
-  border-radius: 8px; /* Optional: rounded corners for the card */
+  border-radius: 8px; /* Rounded corners for the card */
 }
 
 /* NFT Image */
 .nft-image {
   object-fit: cover;
   border-radius: 8px;
+  width: 250px; /* Increased width */
+  height: 250px; /* Increased height */
 }
 
-/* Building List Items */
+/* Building Image */
+.building-image {
+  object-fit: cover;
+  border-radius: 8px;
+  width: 64px; /* Increased size */
+  height: 64px;
+}
+
+/* Building Item */
 .building-item {
   cursor: pointer;
   background-color: transparent;
   color: rgb(var(--n1)); /* White */
   border: none;
   position: relative;
+  align-items: center;
+  text-align: center;
 }
 
-/* Building List Item Images */
-.nft-card .building-item img {
-  width: 48px;
-  height: 48px;
-  border-radius: 4px; /* Optional: rounded corners for images */
+/* Building Info */
+.building-info h6 {
+  transition: color 0.3s;
+  font-size: 0.9rem; /* Reduced font size */
+}
+
+.building-info h6:hover {
+  color: #007bff; /* Change to a different color on hover */
+}
+
+/* Resource Icons */
+.resource-icon {
+  width: 32px; /* Increased size */
+  height: 32px;
+}
+
+/* Stat Boosts List */
+.stat-boost-list li {
+  font-size: 0.9rem; /* Reduced font size */
+}
+
+/* Resource Lists */
+.resource-list li,
+.upkeep-list li,
+.output-list li {
+  font-size: 0.9rem; /* Reduced font size */
 }
 
 /* Card Title */
 .card-title {
   color: rgb(var(--p2)); /* Vibrant Blue */
+  font-size: 1.25rem; /* Reduced font size */
 }
 
 /* Card Text */
 .card-text {
   color: rgb(var(--n1)); /* White */
+  font-size: 0.95rem; /* Reduced font size */
 }
 
 /* Section Headings */
 .fw-bold {
   color: rgb(var(--p1)); /* Deep Blue */
+  font-size: 1rem; /* Reduced font size */
 }
 
 /* List Items */
 ul.list-unstyled li {
   color: rgb(var(--n1)); /* White */
+  font-size: 0.9rem; /* Reduced font size */
 }
 
 /* Coordinates */
 .ms-2 {
   color: rgb(var(--n1)); /* White */
+  font-size: 0.9rem; /* Reduced font size */
 }
 
 /* Button Styles */
 .btn-primary {
   background-color: rgb(var(--p2)); /* Vibrant Blue */
   border-color: rgb(var(--p2)); /* Vibrant Blue */
+  font-size: 1rem; /* Adjusted font size */
 }
 
 .btn-primary:hover {
@@ -68,10 +107,21 @@ ul.list-unstyled li {
   border-color: rgb(var(--s1)); /* Medium Blue */
 }
 
+.btn-secondary {
+  background-color: rgb(var(--n3)); /* Neutral color for secondary buttons */
+  border-color: rgb(var(--n3));
+  font-size: 1rem; /* Adjusted font size */
+}
+
+.btn-secondary:hover {
+  background-color: rgb(var(--n4)); /* Darker shade on hover */
+  border-color: rgb(var(--n4));
+}
+
 /* List Group Items */
 .nft-card .list-group-item {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  padding: 0.75rem 1.25rem; /* Increased padding for better touch targets */
+  font-size: 0.9rem; /* Reduced font size */
   color: rgb(var(--n2)); /* White */
   position: relative; /* Ensure positioning context for tooltip */
 }
@@ -102,7 +152,8 @@ ul.list-unstyled li {
   position: absolute;
   z-index: 1000; /* Ensure it's on top */
   top: 100%; /* Position below the parent */
-  transform: translateX(50%);
+  left: 50%;
+  transform: translateX(-50%);
   transition: opacity 0.3s;
   /* Optional: Add a slight shadow */
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
@@ -120,22 +171,11 @@ ul.list-unstyled li {
   border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent;
 }
 
-/* Show the tooltip when hovering over the parent <li> */
-.nft-card .list-group-item:hover .tooltip-text {
+/* Show the tooltip when hovering over the parent .building-item */
+.nft-card .building-item:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
 }
-
-/* Optional: Highlight building name on hover */
-.building-info h6 {
-  transition: color 0.3s;
-}
-
-.nft-card .list-group-item.completed:hover .building-info h6 {
-  color: #007bff; /* Change to a different color on hover */
-}
-
-/* Additional Styles */
 
 /* Buildings List Item Hover Effects */
 .building-item:hover {
@@ -154,10 +194,96 @@ ul.list-unstyled li {
   margin-top: 5px;
 }
 
-/* Responsive Tooltip Positioning */
+/* Dropdown Styles */
+.nft-card .form-select {
+  background-color: rgb(var(--n5)); /* Matches the card's background */
+  color: rgb(var(--n1)); /* Matches the card's text color */
+  border: 1px solid rgb(var(--p2)); /* Matches the primary border color */
+  border-radius: 4px; /* Consistent border radius */
+  font-size: 0.9rem; /* Consistent font size */
+  padding: 0.5rem 1rem; /* Consistent padding */
+  appearance: none; /* Remove default arrow for custom styling */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  background-image: url("/img/dropdown-arrow.svg"); /* Path to your custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+}
+
+/* Focus State */
+.nft-card .form-select:focus {
+  border-color: rgb(var(--s1)); /* Secondary color on focus */
+  box-shadow: 0 0 0 0.2rem rgba(var(--s1), 0.25); /* Subtle shadow */
+  outline: none; /* Remove default outline */
+  background-color: rgb(var(--n5)); /* Ensure background remains consistent */
+  color: rgb(var(--n1)); /* Ensure text color remains consistent */
+}
+
+/* Hover State */
+.nft-card .form-select:hover {
+  border-color: rgb(var(--s1)); /* Secondary color on hover */
+}
+
+/* Disabled State */
+.nft-card .form-select:disabled {
+  background-color: rgba(var(--n5), 0.5); /* Semi-transparent background */
+  color: rgba(var(--n1), 0.7); /* Semi-transparent text */
+  cursor: not-allowed; /* Indicate disabled state */
+}
+
+/* Dropdown Options Styling */
+.nft-card .form-select option {
+  background-color: rgb(var(--n5)); /* Matches the card's background */
+  color: rgb(var(--n1)); /* Matches the card's text color */
+  font-size: 0.9rem; /* Consistent font size */
+}
+
+/* Custom Select Arrow for Webkit Browsers */
+.nft-card .form-select::-webkit-inner-spin-button,
+.nft-card .form-select::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.nft-card .form-select::-ms-expand {
+  display: none;
+}
+
+/* Placeholder Styling */
+.nft-card .form-select option[value=""] {
+  color: rgb(var(--n3)); /* Different color for placeholder */
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .tooltip-text {
     width: 200px;
     /* margin-left: -100px; Half of the tooltip width to center it */
+  }
+
+  .nft-image {
+    width: 200px; /* Adjusted for smaller screens */
+    height: 200px;
+  }
+
+  .building-image {
+    width: 48px; /* Adjusted for smaller screens */
+    height: 48px;
+  }
+
+  .resource-icon {
+    width: 24px; /* Adjusted for smaller screens */
+    height: 24px;
+  }
+
+  .building-item img {
+    width: 48px; /* Adjusted for smaller screens */
+    height: 48px;
+  }
+
+  /* Adjust dropdown width on smaller screens if necessary */
+  .nft-card .form-select {
+    width: 100%;
+    font-size: 0.85rem; /* Slightly smaller font on mobile */
   }
 }

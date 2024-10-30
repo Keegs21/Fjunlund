@@ -14,19 +14,20 @@ const GRID_SIZE = 100; // 100 rows and 100 columns
 const CELL_SIZE = 50; // Original pixels per cell
 
 const MapGrid = () => {
-  // Decide on the display size
-  const displayWidth = 800; // Adjust as needed
-  const displayHeight = 600; // Adjust as needed
+  // Define the display size (you can adjust these values as needed)
+  const displayWidth = 1600; // Width of the display area in pixels
+  const displayHeight = 1200; // Height of the display area in pixels
 
-  // Calculate the scale factor to fit the map within the display area
+  // Calculate the total size of the grid
   const totalWidth = GRID_SIZE * CELL_SIZE;
   const totalHeight = GRID_SIZE * CELL_SIZE;
 
+  // Calculate the scale factor to fit the grid within the display area
   const scaleX = displayWidth / totalWidth;
   const scaleY = displayHeight / totalHeight;
-  const scale = Math.min(scaleX, scaleY);
+  const scale = Math.min(scaleX, scaleY); // Maintain aspect ratio
 
-  // Adjust the cell size accordingly
+  // Adjust the cell size based on the scale factor
   const adjustedCellSize = CELL_SIZE * scale;
 
   return (
@@ -36,6 +37,8 @@ const MapGrid = () => {
         height: displayHeight,
         overflow: "hidden",
         position: "relative",
+        justifyContent: "center", // Center horizontally
+        alignItems: "center", // Center vertically
       }}
     >
       <div
@@ -44,8 +47,8 @@ const MapGrid = () => {
           height: totalHeight * scale,
           position: "relative",
           backgroundImage: "url('/img/map1.webp')",
-          backgroundSize: "100% 100%",
-          backgroundPosition: "top left",
+          backgroundSize: "cover", // Ensure the image covers the entire div
+          backgroundPosition: "center", // Center the background image
           backgroundRepeat: "no-repeat",
         }}
       >
@@ -62,7 +65,7 @@ const MapGrid = () => {
                 left: xPos,
                 width: adjustedCellSize,
                 height: adjustedCellSize,
-                transform: "translate(-50%, -50%)",
+                transform: "translate(-50%, -50%)", // Center the NFT within the cell
                 border: "1px solid rgba(0, 0, 0, 0.1)",
                 boxSizing: "border-box",
                 overflow: "hidden",
@@ -75,8 +78,8 @@ const MapGrid = () => {
               <Image
                 src={nft.imageUrl}
                 alt={`NFT ${nft.id}`}
-                layout="fill"
-                objectFit="cover"
+                fill // Use 'fill' to make the image cover the parent div
+                style={{ objectFit: "cover" }} // Ensure the image covers the div without distortion
               />
             </div>
           );

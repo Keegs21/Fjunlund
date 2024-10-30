@@ -1,16 +1,12 @@
 "use client";
 import Button from "@/components/shared/Button";
-import sword from "@/public/img/sword.png";
 import topplayer1 from "@/public/img/food.png";
 import topplayer2 from "@/public/img/wood.png";
 import topplayer3 from "@/public/img/stone.png";
 import topplayer4 from "@/public/img/gold.png";
 import topplayer5 from "@/public/img/iron.jpeg";
 import topplayer6 from "@/public/img/brass.png";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { useEffect } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Autoplay, Navigation } from "swiper/modules";
@@ -21,84 +17,38 @@ const topPlayers = [
     id: 1,
     img: topplayer1,
     title: "Food",
-    team: "Fire",
   },
   {
     id: 2,
     img: topplayer2,
     title: "Wood",
-    team: "Fire",
   },
   {
     id: 3,
     img: topplayer3,
     title: "Stone",
-    team: "Fire",
   },
   {
     id: 4,
     img: topplayer6,
     title: "Brass",
-    team: "Fire",
   },
   {
     id: 5,
     img: topplayer5,
     title: "Iron",
-    team: "Fire",
   },
   {
     id: 6,
     img: topplayer4,
     title: "Gold",
-    team: "Fire",
   },
 ];
+
 const TopPlayer = () => {
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    const swordTL = gsap.timeline();
-
-    // Scene 1
-    swordTL.to(".sword-area", {
-      scrollTrigger: {
-        trigger: "#swiper-3d",
-        start: "top 20%",
-        end: "+=1000",
-        scrub: 1,
-      },
-      right: "unset",
-      left: "0%",
-      bottom: "0%",
-      opacity: 1,
-      scale: 1,
-    });
-
-    // Scene 2
-    swordTL.to(".sword-area", {
-      scrollTrigger: {
-        trigger: "#top-player",
-        start: "top 25%",
-        end: "+=100",
-        scrub: 1,
-      },
-      rotation: 180,
-    });
-
-    // Clean up on component unmount
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => {
-        trigger.kill(); // Kill all ScrollTriggers
-      });
-    };
-  }, []);
   return (
     <section className="top-player-section pt-120 pb-120" id="top-player">
-      {/* <!-- sword animation --> */}
-      <div className="sword-area" id="sword-area">
-        <Image className="w-100" src={sword} alt="sword" />
-      </div>
+      {/* Removed sword animation */}
       <div className="red-ball end-0"></div>
       <div className="container">
         <div className="row justify-content-between mb-15">
@@ -145,7 +95,7 @@ const TopPlayer = () => {
               }}
               wrapperClass="my-1"
               className="swiper swiper-top-player">
-              {topPlayers.map(({ id, img, team, title }) => (
+              {topPlayers.map(({ id, img, title }) => (
                 <SwiperSlide key={id}>
                   <div
                     className="player-card d-grid gap-6 p-6 card-tilt"
@@ -156,17 +106,13 @@ const TopPlayer = () => {
                           <Image
                             className="w-100 h-100 rounded-circle"
                             src={img}
-                            alt="player"
+                            alt={title}
                           />
-                          <span className="player-status position-absolute end-0 bottom-0 tcn-1 fs-xs d-center">
-                            1
-                          </span>
                         </div>
                         <div>
                           <h5 className="player-name tcn-1 mb-1 title-anim">
                             {title}
                           </h5>
-                          <span className="tcn-6 fs-sm">Duelist</span>
                         </div>
                       </div>
                       <form action="#">
@@ -174,44 +120,6 @@ const TopPlayer = () => {
                           <i className="ti ti-user-plus fs-xl"></i>
                         </Button>
                       </form>
-                    </div>
-                    <div className="player-score-details d-flex align-items-center flex-wrap gap-3">
-                      <div className="score">
-                        <h6 className="score-title tcn-6 mb-2">Score</h6>
-                        <ul className="d-flex align-items-center gap-1 tcp-2">
-                          <li>
-                            <i className="ti ti-star-filled"></i>
-                          </li>
-                          <li>
-                            <i className="ti ti-star-filled"></i>
-                          </li>
-                          <li>
-                            <i className="ti ti-star-filled"></i>
-                          </li>
-                          <li>
-                            <i className="ti ti-star-half-filled"></i>
-                          </li>
-                          <li>
-                            <i className="ti ti-star"></i>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="rank">
-                        <h6 className="rank-title tcn-6 mb-2">Rank</h6>
-                        <span className="tcn-1 fs-sm">
-                          <i className="ti ti-diamond"></i> Diamond
-                        </span>
-                      </div>
-                      <div className="region">
-                        <h6 className="region-title tcn-6 mb-2">Region</h6>
-                        <span className="tcn-1 fs-sm text-uppercase"> EUW</span>
-                      </div>
-                      <div className="team">
-                        <h6 className="team-title tcn-6 mb-2">Team</h6>
-                        <span className="tcs-1 fs-sm text-uppercase">
-                          {team}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </SwiperSlide>

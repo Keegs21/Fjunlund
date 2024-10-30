@@ -1,5 +1,6 @@
 import { defineChain, createClient } from 'viem';
 import { createConfig, http  } from '@wagmi/core'
+// import { fantomSonicTestnet } from '@wagmi/core/chains'
 
 export const fantomSonicTestnet = /*#__PURE__*/ defineChain({
     id: 64165,

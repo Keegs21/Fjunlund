@@ -16,20 +16,10 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <><section className="hero-section pt-20 pb-120 position-relative">
+    <>
+    <section className="hero-section pt-20 pb-12 position-relative">
       <div className="gradient-bg"></div>
       <div className="gradient-bg2"></div>
-      <div className="star-area">
-        <div className="big-star">
-          <Image className="w-100 h-25" src={bigStar} alt="star" />
-        </div>
-        <div className="small-star">
-          <Image className="w-100" src={smallStar} alt="star" />
-        </div>
-      </div>
-      <div className="rotate-award">
-        <Image className="w-100" src={award} alt="award" />
-      </div>
       <div className="container pt-120 pb-15">
         <div className="row g-6 justify-content-between">
           <div className="col-lg-5 col-md-6 col-sm-8">
@@ -60,35 +50,9 @@ const Hero = () => {
               <div className="hero-banner-bg">
                 <Image className="w-100" src={bg1} alt="banner" />
               </div>
-              <div className="hero-banner-img">
+                <div className="hero-banner-img" style={{ borderRadius: '15px', overflow: 'hidden' }}>
                 <Image className="w-100 hero" src={hero} alt="banner" />
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-4 col-lg-5 col-md-6 order-md-1 order-lg-last">
-            <div className="hero-content">
-              <div className="active-player-list d-grid justify-content-end gap-2">
-                <ul className="player-lists d-flex align-items-center">
-                  <li className="rounded-circle overflow-hidden me-n6">
-                    <Image src={player1} alt="player" />
-                  </li>
-                  <li className="rounded-circle overflow-hidden me-n6">
-                    <Image src={player2} alt="player" />
-                  </li>
-                  <li className="rounded-circle overflow-hidden me-n6">
-                    <Image src={player3} alt="player" />
-                  </li>
-                  <li className="rounded-circle overflow-hidden me-n6">
-                    <Image src={player4} alt="player" />
-                  </li>
-                  <li className="rounded-circle overflow-hidden me-n6 heading-font fs-xl">
-                    99+
-                  </li>
-                </ul>
-                <span className="d-block tcn-1 dot-icon cursor-scale growDown2 fs-xl text-end">
-                  Active Players
-                </span>
-              </div>
+                </div>
             </div>
           </div>
         </div>
@@ -126,34 +90,42 @@ const Hero = () => {
         </div>
       </div>
     </section>
-    <div className="container mt-5">
-        <div className="row justify-content-center">
-          <div className="col-lg-8 col-md-10">
-            <div className="intro-text p-4 bgp-2 rounded">
-              <h3 className="fw-bold mb-3">Welcome to Fjunlund</h3>
-              <p className="mb-3">
-                Fjunlund is an Epoch-Based Strategy game of accumulating resources,
-                developing lands, and winning wars.
-              </p>
-              <p className="mb-3">
-                We also aim to be a beacon of good for the infrastructure and security
-                of the DeFi world itself as we believe it will serve a vitally important
-                financial role as the world continues to adopt crypto.
-              </p>
-              <p className="mb-3">
-                We aim to achieve this by being a Validator of the highest order with top
-                security while maintaining speeds to keep the blockchain operating at a
-                high efficiency and speed.
-              </p>
-              <p className="mb-0">
-                Our game will revolve around our NFTs that represent the land that users
-                will need to govern. How well they govern this land will determine how
-                much they are paid out per epoch.
-              </p>
-            </div>
+    <div
+      className="container text-center"
+      style={{
+        width: '90%',        // Sets the container to 90% of the viewport width
+        maxWidth: '1200px',  // Sets a maximum width to prevent it from becoming too wide on large screens
+        marginTop: 128,    // Centers the container horizontally
+      }}
+    >
+      <div className="row justify-content-center">
+        <div className="col-lg-12 col-md-10">
+          <div className="intro-text p-4 bgp-2 rounded">
+            <h3 className="fw-bold mb-3">Welcome to Fjunlund</h3>
+            <p className="mb-3">
+              Fjunlund is an Epoch-Based Strategy game of accumulating resources,
+              developing lands, and winning wars.
+            </p>
+            <p className="mb-3">
+              We also aim to be a beacon of good for the infrastructure and security
+              of the DeFi world itself as we believe it will serve a vitally important
+              financial role as the world continues to adopt crypto.
+            </p>
+            <p className="mb-3">
+              We aim to achieve this by being a Validator of the highest order with top
+              security while maintaining speeds to keep the blockchain operating at a
+              high efficiency and speed.
+            </p>
+            <p className="mb-0">
+              Our game will revolve around our NFTs that represent the land that users
+              will need to govern. How well they govern this land will determine how
+              much they are paid out per epoch.
+            </p>
           </div>
         </div>
       </div>
+    </div>
+
       </>
   );
 };
