@@ -1,7 +1,6 @@
 "use client";
-import avatar1 from "@/public/img/avatar1.png";
-import avatar2 from "@/public/img/avatar2.png";
-import avatar3 from "@/public/img/avatar3.png";
+
+
 import award from "@/public/img/award.png";
 import bg1 from "@/public/img/bg-2.png";
 import bigStar from "@/public/img/sonic.png";
@@ -13,31 +12,11 @@ import player4 from "@/public/img/player4.png";
 import smallStar from "@/public/img/small-star.png";
 import Image from "next/image";
 import React from "react";
-import Tilt from "react-parallax-tilt";
 
-const winners = [
-  {
-    id: 1,
-    name: "User 0x03m...",
-    img: avatar1,
-    prizeMoney: 350,
-  },
-  {
-    id: 2,
-    name: "User 0x9im...",
-    img: avatar2,
-    prizeMoney: 250,
-  },
-  {
-    id: 3,
-    name: "User 0xfw3...",
-    img: avatar3,
-    prizeMoney: 150,
-  },
-];
+
 const Hero = () => {
   return (
-    <section className="hero-section pt-20 pb-120 position-relative">
+    <><section className="hero-section pt-20 pb-120 position-relative">
       <div className="gradient-bg"></div>
       <div className="gradient-bg2"></div>
       <div className="star-area">
@@ -64,10 +43,14 @@ const Hero = () => {
                 <span className="d-block tcp-1">Fjunlund</span>
               </h1>
               <h3>Where DeFi meets GameFi and NFT Ownership</h3>
-              <h2 className="hero-subtitle tcs-1 fw-medium mb-10">Mint an NFT now to Start Managing Resources, Developing Lands, and Building Armies</h2>
+              <h2 className="hero-subtitle tcs-1 fw-medium mb-10">
+                Mint an NFT now to Start Managing Resources, Developing Lands, and
+                Building Armies
+              </h2>
               <a
                 href="https://www.youtube.com/watch?v=G5kzUpWAusI"
-                className="btn-half-border position-relative d-inline-block py-2 px-6 bgp-1 rounded-pill popupvideo mfp-iframe">
+                className="btn-half-border position-relative d-inline-block py-2 px-6 bgp-1 rounded-pill popupvideo mfp-iframe"
+              >
                 Play Now
               </a>
             </div>
@@ -84,34 +67,6 @@ const Hero = () => {
           </div>
           <div className="col-xl-4 col-lg-5 col-md-6 order-md-1 order-lg-last">
             <div className="hero-content">
-              <Tilt
-                className="card-area py-lg-8 py-6 px-lg-6 px-3 rounded-5 tilt mb-10"
-                data-tilt>
-                <h3 className="tcn-1 dot-icon cursor-scale growDown mb-6 title-anim">
-                  Previous Epoch Leaderboard
-                </h3>
-                <div className="hr-line mb-6"></div>
-                <div className="card-items d-grid gap-5">
-                  {winners.map(({ id, img, name, prizeMoney }) => (
-                    <React.Fragment key={id}>
-                      <div className="card-item d-flex align-items-center gap-4">
-                        <div className="card-img-area rounded-circle overflow-hidden">
-                          <Image className="w-100" src={img} alt="profile" />
-                        </div>
-                        <div className="card-info">
-                          <h4 className="card-title fw-semibold tcn-1 mb-1 cursor-scale growDown2 title-anim">
-                            {name}
-                          </h4>
-                          <p className="card-text tcs-1 fw-medium">
-                            +${prizeMoney}
-                          </p>
-                        </div>
-                      </div>
-                      {id !== 3 && <div className="hr-line"></div>}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </Tilt>
               <div className="active-player-list d-grid justify-content-end gap-2">
                 <ul className="player-lists d-flex align-items-center">
                   <li className="rounded-circle overflow-hidden me-n6">
@@ -171,6 +126,35 @@ const Hero = () => {
         </div>
       </div>
     </section>
+    <div className="container mt-5">
+        <div className="row justify-content-center">
+          <div className="col-lg-8 col-md-10">
+            <div className="intro-text p-4 bgp-2 rounded">
+              <h3 className="fw-bold mb-3">Welcome to Fjunlund</h3>
+              <p className="mb-3">
+                Fjunlund is an Epoch-Based Strategy game of accumulating resources,
+                developing lands, and winning wars.
+              </p>
+              <p className="mb-3">
+                We also aim to be a beacon of good for the infrastructure and security
+                of the DeFi world itself as we believe it will serve a vitally important
+                financial role as the world continues to adopt crypto.
+              </p>
+              <p className="mb-3">
+                We aim to achieve this by being a Validator of the highest order with top
+                security while maintaining speeds to keep the blockchain operating at a
+                high efficiency and speed.
+              </p>
+              <p className="mb-0">
+                Our game will revolve around our NFTs that represent the land that users
+                will need to govern. How well they govern this land will determine how
+                much they are paid out per epoch.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </>
   );
 };
 

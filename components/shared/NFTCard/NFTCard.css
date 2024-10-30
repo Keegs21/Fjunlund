@@ -2,80 +2,162 @@
 
 /* Card Container */
 .nft-card {
-    max-width: 800px;
-    margin: 20px auto;
-    box-shadow: 0 4px 8px rgba(var(--n0), 0.1);
-    background-color: rgb(var(--n5)); /* Sleek Black Grey */
-    color: rgb(var(--n1)); /* White */
+  max-width: 1500px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(var(--n0), 0.1);
+  background-color: rgb(var(--n5)); /* Sleek Black Grey */
+  color: rgb(var(--n1)); /* White */
+  border-radius: 8px; /* Optional: rounded corners for the card */
+}
+
+/* NFT Image */
+.nft-image {
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Building List Items */
+.building-item {
+  cursor: pointer;
+  background-color: transparent;
+  color: rgb(var(--n1)); /* White */
+  border: none;
+  position: relative;
+}
+
+/* Building List Item Images */
+.nft-card .building-item img {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px; /* Optional: rounded corners for images */
+}
+
+/* Card Title */
+.card-title {
+  color: rgb(var(--p2)); /* Vibrant Blue */
+}
+
+/* Card Text */
+.card-text {
+  color: rgb(var(--n1)); /* White */
+}
+
+/* Section Headings */
+.fw-bold {
+  color: rgb(var(--p1)); /* Deep Blue */
+}
+
+/* List Items */
+ul.list-unstyled li {
+  color: rgb(var(--n1)); /* White */
+}
+
+/* Coordinates */
+.ms-2 {
+  color: rgb(var(--n1)); /* White */
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: rgb(var(--p2)); /* Vibrant Blue */
+  border-color: rgb(var(--p2)); /* Vibrant Blue */
+}
+
+.btn-primary:hover {
+  background-color: rgb(var(--s1)); /* Medium Blue */
+  border-color: rgb(var(--s1)); /* Medium Blue */
+}
+
+/* List Group Items */
+.nft-card .list-group-item {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: rgb(var(--n2)); /* White */
+  position: relative; /* Ensure positioning context for tooltip */
+}
+
+/* Buildings Under Construction List Items */
+.nft-card .mt-4 .list-group-item:not(.completed) {
+  color: rgb(var(--p1)); /* Deep Blue */
+}
+
+/* Completed Construction */
+.nft-card .list-group-item.completed {
+  color: green;
+  font-weight: bold;
+  background-color: rgba(0, 128, 0, 0.1); /* Light green background */
+  cursor: pointer; /* Indicates interactivity */
+}
+
+/* Tooltip Text */
+.tooltip-text {
+  visibility: hidden; /* Hidden by default */
+  opacity: 0;
+  width: 250px;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1000; /* Ensure it's on top */
+  top: 100%; /* Position below the parent */
+  transform: translateX(50%);
+  transition: opacity 0.3s;
+  /* Optional: Add a slight shadow */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Tooltip Arrow */
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: -5px; /* Position above the tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent;
+}
+
+/* Show the tooltip when hovering over the parent <li> */
+.nft-card .list-group-item:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Optional: Highlight building name on hover */
+.building-info h6 {
+  transition: color 0.3s;
+}
+
+.nft-card .list-group-item.completed:hover .building-info h6 {
+  color: #007bff; /* Change to a different color on hover */
+}
+
+/* Additional Styles */
+
+/* Buildings List Item Hover Effects */
+.building-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+/* Tooltip Content Styling */
+.tooltip-text ul {
+  padding-left: 15px;
+  margin: 5px 0;
+}
+
+.tooltip-text strong {
+  display: block;
+  margin-top: 5px;
+}
+
+/* Responsive Tooltip Positioning */
+@media (max-width: 768px) {
+  .tooltip-text {
+    width: 200px;
+    /* margin-left: -100px; Half of the tooltip width to center it */
   }
-  
-  /* NFT Image */
-  .nft-image {
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  /* Building List Items */
-  .building-item {
-    cursor: pointer;
-    background-color: transparent;
-    color: rgb(var(--n1)); /* White */
-    border: none;
-    position: relative;
-  }
-  
-  /* Building Popup */
-  .building-popup {
-    background-color: rgb(var(--n4)); /* Very Dark Grey */
-    border: 1px solid rgb(var(--s1)); /* Medium Blue */
-    padding: 10px;
-    width: 220px;
-    z-index: 1000;
-    box-shadow: 0 4px 8px rgba(var(--n0), 0.1);
-    top: 0;
-    left: 100%;
-    margin-left: 10px;
-  }
-  
-  .building-popup p {
-    margin: 0;
-    font-size: 0.9em;
-    color: rgb(var(--n1)); /* White */
-  }
-  
-  /* Card Title */
-  .card-title {
-    color: rgb(var(--p2)); /* Vibrant Blue */
-  }
-  
-  /* Card Text */
-  .card-text {
-    color: rgb(var(--n1)); /* White */
-  }
-  
-  /* Section Headings */
-  .fw-bold {
-    color: rgb(var(--p1)); /* Deep Blue */
-  }
-  
-  /* List Items */
-  ul.list-unstyled li {
-    color: rgb(var(--n1)); /* White */
-  }
-  
-  /* Coordinates */
-  .ms-2 {
-    color: rgb(var(--n1)); /* White */
-  }
-  
-  /* Button Styles */
-  .btn-primary {
-    background-color: rgb(var(--p2)); /* Vibrant Blue */
-    border-color: rgb(var(--p2)); /* Vibrant Blue */
-  }
-  
-  .btn-primary:hover {
-    background-color: rgb(var(--s1)); /* Medium Blue */
-    border-color: rgb(var(--s1)); /* Medium Blue */
-  }
-  
+}

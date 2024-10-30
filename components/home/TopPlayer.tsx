@@ -1,12 +1,12 @@
 "use client";
 import Button from "@/components/shared/Button";
 import sword from "@/public/img/sword.png";
-import topplayer1 from "@/public/img/food.jpeg";
-import topplayer2 from "@/public/img/wood.jpeg";
-import topplayer3 from "@/public/img/stone.jpeg";
-import topplayer4 from "@/public/img/gold.jpeg";
+import topplayer1 from "@/public/img/food.png";
+import topplayer2 from "@/public/img/wood.png";
+import topplayer3 from "@/public/img/stone.png";
+import topplayer4 from "@/public/img/gold.png";
 import topplayer5 from "@/public/img/iron.jpeg";
-import topplayer6 from "@/public/img/brass.jpeg";
+import topplayer6 from "@/public/img/brass.png";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
